@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class MyUserController {
 
     private final MyUserService myUserService;
-    //Hashem is here bitch
+    //Hashem is here bitc
 
     @GetMapping("/getAll")
     public ResponseEntity getAll() {
