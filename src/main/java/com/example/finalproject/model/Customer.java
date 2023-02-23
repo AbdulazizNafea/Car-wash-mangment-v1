@@ -1,6 +1,5 @@
 package com.example.finalproject.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,16 +43,16 @@ public class Customer {
 //    @OneToOne(cascade = CascadeType.ALL, mappedBy = "customer")
 //    @PrimaryKeyJoinColumn
 //    private MyUser myUser;
-//
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-//    private List<Point> point;
-//
-//
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-//    private List<Car> car;
-//
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-//    private List<Bill> bill;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    private List<Point> point;
+
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    private List<Car> car;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    private List<Bill> bill;
 
 
 }

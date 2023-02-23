@@ -23,11 +23,11 @@ public class Branch {
     private String phone;
     private Date created;
 
-//    @ManyToOne
-//    @JoinColumn(name = "merchant_id", referencedColumnName = "id")
-//    @JsonIgnore
-//    private Merchant merchant;
-//
+    @ManyToOne
+    @JoinColumn(name = "merchant_id", referencedColumnName = "id")
+    @JsonIgnore
+    private Merchant merchant;
+
 //    @OneToOne(cascade = CascadeType.ALL , mappedBy = "branch")
 //    @PrimaryKeyJoinColumn
 //    private Feature feature;

@@ -54,7 +54,6 @@ public class MyUserController {
 //       myUserService.assignMyUserToMerchant(md);
 //        return   ResponseEntity.status(200).body("Add Address Done");
 //    }
-
 //    @PutMapping("/assignCustomer")
 //    public ResponseEntity assignCustomer(@RequestBody MyUserDTO md){
 //        myUserService.assignMyUserToCustomer(md);
