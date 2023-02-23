@@ -61,21 +61,21 @@ public class MyUserService {
     ///////////////////////////////////////////////////////////////////////
     //assign here
 
-    public void assignMyUserToMerchant(MyUserDTO md){
-        Merchant merchant = merchantRepository.findMerchantById(md.getId());
-        if(merchant == null){
-            throw new ApiException("merchant ID not found");
-        }
-        MyUser myUser = new MyUser(null,md.getUsername(),md.getPassword(),md.getEmail(),md.getPhone(),md.getCreatedAt(),md.getRole(),merchant,null);
-        myUserRepository.save(myUser);
-    }
-    public void assignMyUserToCustomer(MyUserDTO md){
-        Customer customer = customerRepository.findCustomerById(md.getId());
-        if(customer == null){
-            throw new ApiException("user ID not found");
-        }
-        MyUser myUser = new MyUser(null,md.getUsername(),md.getPassword(),md.getEmail(),md.getPhone(),md.getCreatedAt(),md.getRole(),null,customer);
-        myUserRepository.save(myUser);
-    }
+//    public void assignMyUserToMerchant(MyUserDTO md){
+//        Merchant merchant = merchantRepository.findMerchantById(md.getId());
+//        if(merchant == null){
+//            throw new ApiException("merchant ID not found");
+//        }
+//        MyUser myUser = new MyUser(null,md.getUsername(),md.getPassword(),md.getEmail(),md.getPhone(),md.getCreatedAt(),md.getRole(),merchant,null);
+//        myUserRepository.save(myUser);
+//    }
+//    public void assignMyUserToCustomer(MyUserDTO md){
+//        Customer customer = customerRepository.findCustomerById(md.getId());
+//        if(customer == null){
+//            throw new ApiException("user ID not found");
+//        }
+//        MyUser myUser = new MyUser(null,md.getUsername(),md.getPassword(),md.getEmail(),md.getPhone(),md.getCreatedAt(),md.getRole(),null,customer);
+//        myUserRepository.save(myUser);
+//    }
 
 }

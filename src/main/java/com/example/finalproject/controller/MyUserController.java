@@ -48,16 +48,16 @@ public class MyUserController {
     //////////////////////////////////////////////////////////////////
     //assign here
 
-    @PostMapping("/assignMerchant")
-    public ResponseEntity assignMerchant(@RequestBody MyUserDTO md){
-       myUserService.assignMyUserToMerchant(md);
-        return   ResponseEntity.status(200).body("Add Address Done");
-    }
-
-    @PutMapping("/assignCustomer")
-    public ResponseEntity assignCustomer(@RequestBody MyUserDTO md){
-        myUserService.assignMyUserToCustomer(md);
-        return   ResponseEntity.status(200).body("Add Address Done");
-    }
+//    @PostMapping("/assignMerchant")
+//    public ResponseEntity assignMerchant(@RequestBody MyUserDTO md){
+//       myUserService.assignMyUserToMerchant(md);
+//        return   ResponseEntity.status(200).body("Add Address Done");
+//    }
+//
+//    @PutMapping("/assignCustomer")
+//    public ResponseEntity assignCustomer(@RequestBody MyUserDTO md){
+//        myUserService.assignMyUserToCustomer(md);
+//        return   ResponseEntity.status(200).body("Add Address Done");
+//    }
 
 }
