@@ -3,7 +3,9 @@ package com.example.finalproject.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 import java.time.LocalDate;
@@ -12,6 +14,8 @@ import java.util.Collections;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class MyUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +29,14 @@ public class MyUser {
     private String role;
 
 
-    @OneToOne
-    @MapsId
-    @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "myUser")
+    @JoinColumn(name = "myUser_id")
+    @PrimaryKeyJoinColumn
     private Merchant merchant;
+//    @OneToOne
+//    @MapsId
+//    @JsonIgnore
+//    private Merchant merchant;
 
     @OneToOne
     @MapsId

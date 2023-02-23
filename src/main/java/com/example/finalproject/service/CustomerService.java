@@ -1,4 +1,4 @@
 package com.example.finalproject.service;
 
-public class ClintService {
+public class CustomerService {
 }

@@ -24,8 +24,14 @@ public class Merchant {
     private String commercial_record;
 
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "merchant")
-    @PrimaryKeyJoinColumn
+//    @OneToOne(cascade = CascadeType.ALL, mappedBy = "merchant")
+//    @JoinColumn(name = "merchant_id")
+//    @PrimaryKeyJoinColumn
+//    private MyUser myUser;
+
+    @OneToOne
+    @MapsId
+    @JsonIgnore
     private MyUser myUser;
 
 
