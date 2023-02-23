@@ -60,8 +60,8 @@ public class MerchantService {
         if(myUser == null){
             throw new ApiException("user ID not found");
         }
-        Merchant merchant = new Merchant(null,md.getCompany_name(),md.getCommercial_record(),myUser,myUser.getMerchant().getPoint(),myUser.getMerchant().getBranch());
-        merchantRepository.save(merchant);
+      //  Merchant merchant = new Merchant(null,md.getCompany_name(),md.getCommercial_record(),myUser,myUser.getMerchant().getPoint(),myUser.getMerchant().getBranch());
+       // merchantRepository.save(merchant);
     }
 
 }

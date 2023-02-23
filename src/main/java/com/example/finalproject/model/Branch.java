@@ -28,20 +28,20 @@ public class Branch {
     @JsonIgnore
     private Merchant merchant;
 
-    @OneToOne(cascade = CascadeType.ALL , mappedBy = "branch")
-    @PrimaryKeyJoinColumn
-    private Feature feature;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
-    private List<Employee> employees;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
-    private List<ServicesProduct> servicesProducts;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
-    private List<Rating> ratings;
-
-    @ManyToMany
-    @JsonIgnore
-    List<Customer> clint;
+//    @OneToOne(cascade = CascadeType.ALL , mappedBy = "branch")
+//    @PrimaryKeyJoinColumn
+//    private Feature feature;
+//
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
+//    private List<Employee> employees;
+//
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
+//    private List<ServicesProduct> servicesProducts;
+//
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
+//    private List<Rating> ratings;
+//
+//    @ManyToMany
+//    @JsonIgnore
+//    List<Customer> clint;
 }

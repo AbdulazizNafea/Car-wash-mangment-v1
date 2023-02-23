@@ -1,6 +1,5 @@
 package com.example.finalproject.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,9 +40,9 @@ public class Customer {
 //    @JsonIgnore
 //    private MyUser myUser;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "customer")
-    @PrimaryKeyJoinColumn
-    private MyUser myUser;
+//    @OneToOne(cascade = CascadeType.ALL, mappedBy = "customer")
+//    @PrimaryKeyJoinColumn
+//    private MyUser myUser;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     private List<Point> point;
