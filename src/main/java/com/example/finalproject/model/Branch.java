@@ -23,25 +23,25 @@ public class Branch {
     private String phone;
     private Date created;
 
-    @ManyToOne
-    @JoinColumn(name = "merchant_id", referencedColumnName = "id")
-    @JsonIgnore
-    private Merchant merchant;
-
-    @OneToOne(cascade = CascadeType.ALL , mappedBy = "branch")
-    @PrimaryKeyJoinColumn
-    private Feature feature;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
-    private List<Employee> employees;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
-    private List<ServicesProduct> servicesProducts;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
-    private List<Rating> ratings;
-
-    @ManyToMany
-    @JsonIgnore
-    List<Customer> clint;
+//    @ManyToOne
+//    @JoinColumn(name = "merchant_id", referencedColumnName = "id")
+//    @JsonIgnore
+//    private Merchant merchant;
+//
+//    @OneToOne(cascade = CascadeType.ALL , mappedBy = "branch")
+//    @PrimaryKeyJoinColumn
+//    private Feature feature;
+//
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
+//    private List<Employee> employees;
+//
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
+//    private List<ServicesProduct> servicesProducts;
+//
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
+//    private List<Rating> ratings;
+//
+//    @ManyToMany
+//    @JsonIgnore
+//    List<Customer> clint;
 }

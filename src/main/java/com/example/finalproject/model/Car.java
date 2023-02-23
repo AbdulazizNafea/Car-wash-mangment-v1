@@ -23,9 +23,9 @@ public class Car {
 
     private Integer model;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id", referencedColumnName ="id")
-    @JsonIgnore
-    private Customer customer;
+//    @ManyToOne
+//    @JoinColumn(name = "customer_id", referencedColumnName ="id")
+//    @JsonIgnore
+//    private Customer customer;
 
 }

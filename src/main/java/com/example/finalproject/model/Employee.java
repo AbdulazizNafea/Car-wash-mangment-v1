@@ -22,11 +22,11 @@ public class Employee {
 
     private String phone;
 
-    @ManyToOne
-    @JoinColumn(name = "branch_id", referencedColumnName ="id")
-    @JsonIgnore
-    private Branch branch;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
-    private List<Rating> ratings;
+//    @ManyToOne
+//    @JoinColumn(name = "branch_id", referencedColumnName ="id")
+//    @JsonIgnore
+//    private Branch branch;
+//
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
+//    private List<Rating> ratings;
 }

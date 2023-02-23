@@ -55,13 +55,13 @@ public class MerchantService {
     //All assign
 
     //need review
-    public void assignMyUserToCustomer(MerchantDTO md){
-        MyUser myUser = myUserRepository.findMyUserById(md.getId());
-        if(myUser == null){
-            throw new ApiException("user ID not found");
-        }
-        Merchant merchant = new Merchant(null,md.getCompany_name(),md.getCommercial_record(),myUser,myUser.getMerchant().getPoint(),myUser.getMerchant().getBranch());
-        merchantRepository.save(merchant);
-    }
+//    public void assignMyUserToCustomer(MerchantDTO md){
+//        MyUser myUser = myUserRepository.findMyUserById(md.getId());
+//        if(myUser == null){
+//            throw new ApiException("user ID not found");
+//        }
+//        Merchant merchant = new Merchant(null,md.getCompany_name(),md.getCommercial_record(),myUser,myUser.getMerchant().getPoint(),myUser.getMerchant().getBranch());
+//        merchantRepository.save(merchant);
+//    }
 
 }

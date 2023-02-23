@@ -29,19 +29,19 @@ public class MyUser {
     private String role;
 
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "myUser")
-    @JoinColumn(name = "myUser_id")
-    @PrimaryKeyJoinColumn
-    private Merchant merchant;
+//    @OneToOne(cascade = CascadeType.ALL, mappedBy = "myUser")
+//    @JoinColumn(name = "myUser_id")
+//    @PrimaryKeyJoinColumn
+//    private Merchant merchant;
 //    @OneToOne
 //    @MapsId
 //    @JsonIgnore
 //    private Merchant merchant;
 
-    @OneToOne
-    @MapsId
-    @JsonIgnore
-    private Customer customer;
+//    @OneToOne
+//    @MapsId
+//    @JsonIgnore
+//    private Customer customer;
 
 
 

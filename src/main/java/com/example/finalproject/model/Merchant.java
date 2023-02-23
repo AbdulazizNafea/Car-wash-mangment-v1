@@ -29,15 +29,15 @@ public class Merchant {
 //    @PrimaryKeyJoinColumn
 //    private MyUser myUser;
 
-    @OneToOne
-    @MapsId
-    @JsonIgnore
-    private MyUser myUser;
+//    @OneToOne
+//    @MapsId
+//    @JsonIgnore
+//    private MyUser myUser;
 
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "merchant")
-    private List<Point> point;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "merchant")
-    private List<Branch> branch;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "merchant")
+//    private List<Point> point;
+//
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "merchant")
+//    private List<Branch> branch;
 }

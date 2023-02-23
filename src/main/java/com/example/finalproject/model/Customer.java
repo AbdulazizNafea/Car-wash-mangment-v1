@@ -41,19 +41,19 @@ public class Customer {
 //    @JsonIgnore
 //    private MyUser myUser;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "customer")
-    @PrimaryKeyJoinColumn
-    private MyUser myUser;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-    private List<Point> point;
-
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-    private List<Car> car;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-    private List<Bill> bill;
+//    @OneToOne(cascade = CascadeType.ALL, mappedBy = "customer")
+//    @PrimaryKeyJoinColumn
+//    private MyUser myUser;
+//
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+//    private List<Point> point;
+//
+//
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+//    private List<Car> car;
+//
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+//    private List<Bill> bill;
 
 
 }
