@@ -26,14 +26,19 @@ public class ServicesProduct {
 
 
 
-//    @ManyToOne
-//    @JoinColumn(name = "branch_id", referencedColumnName ="id")
-//    @JsonIgnore
-//    private Branch branch;
-//
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "servicesProduct")
-//    private List<Bill> bill;
-//
+    @ManyToOne
+    @JoinColumn(name = "branch_id", referencedColumnName ="id")
+    @JsonIgnore
+    private Branch branch;
+
+
+
+
+    @ManyToOne
+    @JoinColumn(name = "bill_id", referencedColumnName ="id")
+    @JsonIgnore
+    private Bill bill;
+
 //
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "menu")
 //    private List<Feature> coupon;

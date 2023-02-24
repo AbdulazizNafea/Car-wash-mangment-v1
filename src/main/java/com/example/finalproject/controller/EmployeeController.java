@@ -1,6 +1,7 @@
 package com.example.finalproject.controller;
 
 import com.example.finalproject.model.Employee;
+import com.example.finalproject.model.Feature;
 import com.example.finalproject.model.MyUser;
 import com.example.finalproject.service.EmployeeService;
 import jakarta.validation.Valid;
@@ -41,5 +42,13 @@ public class EmployeeController {
     public ResponseEntity delete(@PathVariable Integer id) {
         employeeService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("DELETED");
+    }
+
+    //////////////////////////////////
+    //Assign here
+    @PostMapping("/addEmpolyee/{branchId}")
+    public ResponseEntity addCustomer(@RequestBody @Valid Employee employee, @PathVariable Integer branchId) {
+        employeeService.addEmployeeToBranch(employee,branchId);
+        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 }

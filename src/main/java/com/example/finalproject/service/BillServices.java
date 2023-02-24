@@ -1,8 +1,10 @@
 package com.example.finalproject.service;
 
 import com.example.finalproject.apiException.ApiException;
-import com.example.finalproject.model.Bill;
+import com.example.finalproject.model.*;
 import com.example.finalproject.repository.BillRepository;
+import com.example.finalproject.repository.CustomerRepository;
+import com.example.finalproject.repository.ServicesProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,8 @@ import java.util.List;
 public class BillServices {
 
     private final BillRepository billRepository;
+    private final ServicesProductRepository servicesProductRepository;
+    private final CustomerRepository customerRepository;
 
 
     //////////////////////////////////////////////////
@@ -56,4 +60,58 @@ public class BillServices {
     ///////////////////////////////////////////////////
     // assign here
 
+    public void addServicesToBill(Integer serviceId,Integer billId){
+        Bill bill = billRepository.findBillById(billId);
+        ServicesProduct sp = servicesProductRepository.findServicesProductById(serviceId);
+        if (bill == null ) {
+            throw new ApiException("Bill ID not found");
+        } else if (sp == null ) {
+            throw new ApiException("Services Product ID not found");
+        }
+        for(ServicesProduct ss: bill.getServicesProducts()){
+            if(ss.getId() == serviceId){
+                throw new ApiException("Services Product already added");
+            }
+        }
+        double totalPrice = bill.getTotalPrice();
+        double totalPoints = bill.getTotalPoints();
+        bill.setCreatedDate(LocalDate.now());
+        bill.setTotalPrice(sp.getPrice()+totalPrice);
+        bill.setTotalPoints(sp.getPoint()+totalPoints);
+        sp.setBill(bill);
+        servicesProductRepository.save(sp);
+        billRepository.save(bill);
+    }
+
+    public void removeServicesFromBill(Integer serviceId,Integer billId){
+        Bill bill = billRepository.findBillById(billId);
+        ServicesProduct sp = servicesProductRepository.findServicesProductById(serviceId);
+        if (bill == null ) {
+            throw new ApiException("Bill ID not found");
+        } else if (sp == null ) {
+            throw new ApiException("Services Product ID not found");
+        }else if (bill.getServicesProducts().isEmpty()){
+            throw new ApiException("there is no Services Product to delete it");
+        }
+        double totalPrice = bill.getTotalPrice();
+        double totalPoints = bill.getTotalPoints();
+        bill.setTotalPrice(totalPrice-sp.getPrice());
+        bill.setTotalPoints(totalPoints-sp.getPoint());
+        sp.setBill(null);
+        billRepository.save(bill);
+        servicesProductRepository.save(sp);
+
+    }
+
+    public void addBillToCustomer(Integer customerId,Integer billId){
+        Bill bill = billRepository.findBillById(billId);
+        Customer customer = customerRepository.findCustomerById(customerId);
+        if(bill == null){
+            throw new ApiException("Bill ID not found");
+        } else if (customer == null ) {
+            throw new ApiException("Customer ID not found");
+        }
+        bill.setCustomer(customer);
+        billRepository.save(bill);
+    }
 }

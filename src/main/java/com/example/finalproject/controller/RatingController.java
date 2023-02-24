@@ -1,7 +1,9 @@
 package com.example.finalproject.controller;
 
+import com.example.finalproject.DTO.RatingDTO;
 import com.example.finalproject.model.MyUser;
 import com.example.finalproject.model.Rating;
+import com.example.finalproject.model.ServicesProduct;
 import com.example.finalproject.service.RatingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,5 +45,24 @@ public class RatingController {
     public ResponseEntity delete(@PathVariable Integer id) {
         ratingService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("DELETED");
+    }
+
+    //////////////////////////////////
+    //Assign here
+    @PostMapping("/addRating/{branchId}")
+    public ResponseEntity addSRatingsToBranch(@RequestBody @Valid Rating rating, @PathVariable Integer branchId) {
+        ratingService.addSRatingsToBranch(rating,branchId);
+        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
+    }
+    @PostMapping("/addRatingsToEmployee/{employeeId}")
+    public ResponseEntity addRatingsToEmployee(@RequestBody @Valid Rating rating, @PathVariable Integer employeeId) {
+        ratingService.addRatingsToEmployee(rating,employeeId);
+        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
+    }
+
+    @PostMapping("/addRatingsToBill")
+    public ResponseEntity addRatingsToBill(@RequestBody @Valid RatingDTO rd) {
+        ratingService.addRatingsToBill(rd);
+        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 }

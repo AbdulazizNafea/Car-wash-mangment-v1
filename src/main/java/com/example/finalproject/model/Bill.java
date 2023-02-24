@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
@@ -21,7 +22,7 @@ public class Bill {
 
     private String paymentMethod;
 
-    private Integer totalPoints;
+    private double totalPoints;
 
     private LocalDate createdDate;
 
@@ -30,27 +31,20 @@ public class Bill {
     @JsonIgnore
     private Customer customer;
 
-    @ManyToOne
-    @JoinColumn(name = "servicesProduct_id", referencedColumnName ="id")
-    @JsonIgnore
-    private ServicesProduct servicesProduct;
 
-//Abdulaziz here.
-//aziz2923
+    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "bill")
+    //Remember if you want to delete any child use this
+    // orphanRemoval=true
+    // @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "bill" ,orphanRemoval=true)
+    private List<ServicesProduct> servicesProducts;
 
-//    @OneToOne(cascade = CascadeType.ALL , mappedBy = "carWash")
-//    @PrimaryKeyJoinColumn
-//    private Employee employee;
 
-//    @OneToOne
-//    @MapsId
-//    @JsonIgnore
-//    private Employee employee;
 
-//    @OneToOne
-//    @MapsId
-//    @JsonIgnore
-//    private Rating rating;
+
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "bill")
+    @PrimaryKeyJoinColumn
+    private Rating rating;
 
 
 }

@@ -5,6 +5,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -92,6 +93,13 @@ public class Advice {
     //NullPointerException
     @ExceptionHandler(value = NullPointerException.class)
     public ResponseEntity<ApiException> NullPointerException(NullPointerException e) {
+        String msg =  e.getMessage();
+        return ResponseEntity.status(400).body(new ApiException(msg));
+    }
+
+    //JpaObjectRetrievalFailureException
+    @ExceptionHandler(value = JpaObjectRetrievalFailureException.class)
+    public ResponseEntity<ApiException> JpaObjectRetrievalFailureException(JpaObjectRetrievalFailureException e) {
         String msg =  e.getMessage();
         return ResponseEntity.status(400).body(new ApiException(msg));
     }

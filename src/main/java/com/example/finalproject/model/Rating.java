@@ -19,13 +19,18 @@ public class Rating {
 
     private String comment;
 
-//    @ManyToOne
-//    @JoinColumn(name = "branch_id", referencedColumnName ="id")
-//    @JsonIgnore
-//    private Branch branch;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "employee_id", referencedColumnName ="id")
-//    @JsonIgnore
-//    private Employee employee;
+    @ManyToOne
+    @JoinColumn(name = "branch_id", referencedColumnName ="id")
+    @JsonIgnore
+    private Branch branch;
+
+    @ManyToOne
+    @JoinColumn(name = "employee_id", referencedColumnName ="id")
+    @JsonIgnore
+    private Employee employee;
+
+    @OneToOne
+//    @MapsId
+    @JsonIgnore
+    private Bill bill;
 }

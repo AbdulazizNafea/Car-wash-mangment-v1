@@ -1,5 +1,6 @@
 package com.example.finalproject.controller;
 
+import com.example.finalproject.model.Branch;
 import com.example.finalproject.model.Car;
 import com.example.finalproject.model.Employee;
 import com.example.finalproject.service.CarService;
@@ -40,5 +41,13 @@ public class CarController {
     public ResponseEntity delete(@PathVariable Integer id) {
         carService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("DELETED");
+    }
+
+    /////////////////////////////////////////////////////
+    //Assign here
+    @PostMapping("/addCar/{customerId}")
+    public ResponseEntity addCarToCustomer(@RequestBody @Valid Car car, @PathVariable Integer customerId) {
+        carService.addCarToCustomer(car,customerId);
+        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 }

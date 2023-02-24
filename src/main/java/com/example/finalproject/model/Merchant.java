@@ -1,5 +1,6 @@
 package com.example.finalproject.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
+//@Table(name = "merchant")
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,19 +24,26 @@ public class Merchant {
 
 
 //    @OneToOne(cascade = CascadeType.ALL, mappedBy = "merchant")
-//    @JoinColumn(name = "merchant_id")
 //    @PrimaryKeyJoinColumn
 //    private MyUser myUser;
 
-//    @OneToOne
+    /*
+    //this is correct
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "merchant")
+    @PrimaryKeyJoinColumn
+    private MyUser myUser;
+
+     */
+
+    @OneToOne
 //    @MapsId
-//    @JsonIgnore
-//    private MyUser myUser;
+    @JsonIgnore
+    private MyUser myUser;
 
 
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "merchant")
 //    private List<Point> point;
 //
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "merchant")
-//    private List<Branch> branch;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "merchant")
+    private List<Branch> branch;
 }

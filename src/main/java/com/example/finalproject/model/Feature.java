@@ -18,9 +18,9 @@ public class Feature {
     private String name;
     private String description;
 
-//    @OneToOne
-//    @MapsId
-//    @JsonIgnore
-//    private Branch branch;
+    @ManyToOne
+    @JoinColumn(name = "branch_id", referencedColumnName = "id")
+    @JsonIgnore
+    private Branch branch;
 
 }
