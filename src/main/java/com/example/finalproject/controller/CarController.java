@@ -3,11 +3,13 @@ package com.example.finalproject.controller;
 import com.example.finalproject.model.Branch;
 import com.example.finalproject.model.Car;
 import com.example.finalproject.model.Employee;
+import com.example.finalproject.model.MyUser;
 import com.example.finalproject.service.CarService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/car")
@@ -20,9 +22,9 @@ public class CarController {
         return ResponseEntity.status(HttpStatus.OK).body(carService.getAll());
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity getById(@PathVariable Integer id) {
-        return ResponseEntity.status(HttpStatus.OK).body(carService.getById(id));
+    @GetMapping("/get")
+    public ResponseEntity get(@AuthenticationPrincipal MyUser myUser) {
+        return ResponseEntity.status(HttpStatus.OK).body(carService.get(myUser.getId()));
     }
 
     @PostMapping("/add")
@@ -32,8 +34,8 @@ public class CarController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity update(@RequestBody @Valid Car car, @PathVariable Integer id) {
-        carService.update(car, id);
+    public ResponseEntity update(@RequestBody @Valid Car car, @PathVariable Integer id, @AuthenticationPrincipal MyUser myUser) {
+        carService.update(car, id ,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("UPDATED");
     }
 
@@ -45,9 +47,9 @@ public class CarController {
 
     /////////////////////////////////////////////////////
     //Assign here
-    @PostMapping("/addCar/{customerId}")
-    public ResponseEntity addCarToCustomer(@RequestBody @Valid Car car, @PathVariable Integer customerId) {
-        carService.addCarToCustomer(car,customerId);
+    @PostMapping("/addCar")
+    public ResponseEntity addCarToCustomer(@RequestBody @Valid Car car, @AuthenticationPrincipal MyUser myUser) {
+        carService.addCarToCustomer(car,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 }

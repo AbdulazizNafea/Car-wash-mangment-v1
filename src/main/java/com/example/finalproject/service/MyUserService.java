@@ -9,6 +9,8 @@ import com.example.finalproject.repository.CustomerRepository;
 import com.example.finalproject.repository.MerchantRepository;
 import com.example.finalproject.repository.MyUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,10 +26,11 @@ public class MyUserService {
 
 
     // crud here
-    public List<MyUser> getAll(){
+    public List<MyUser> getAll() {
         return myUserRepository.findAll();
     }
-    public MyUser getById(Integer id){
+
+    public MyUser getById(Integer id) {
         MyUser myUser = myUserRepository.findMyUserById(id);
         if (myUser == null) {
             throw new ApiException("User not found");
@@ -35,23 +38,35 @@ public class MyUserService {
         return myUser;
     }
 
-    public void add(MyUser myUser){
-        LocalDate date =  LocalDate.now();
-        myUser.setCreatedAt(date);
-        myUserRepository.save(myUser);
+//    public void add(MyUser myUser){
+//        LocalDate date =  LocalDate.now();
+//        myUser.setCreatedAt(date);
+//        myUserRepository.save(myUser);
+//    }
+
+    //register user
+    public void register(MyUser user) {
+//        user.setRole("USER");
+        if (user.getPassword().isBlank() || user.getPassword().isEmpty()) {
+            throw new ApiException("Password should be not empty and more than 3");
+        }
+        LocalDate date = LocalDate.now();
+        user.setCreatedAt(date);
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        myUserRepository.save(user);
     }
 
-    public void update(MyUser newMyUser,Integer id) {
-        MyUser myUser= myUserRepository.findMyUserById(id);
-        if(myUser == null){
+    public void update(MyUser newMyUser, Integer id) {
+        MyUser myUser = myUserRepository.findMyUserById(id);
+        if (myUser == null) {
             throw new ApiException("Merchant ID not found");
         }
         myUserRepository.save(myUser);
     }
 
     public void delete(Integer id) {
-        MyUser myUser= myUserRepository.findMyUserById(id);
-        if(myUser == null){
+        MyUser myUser = myUserRepository.findMyUserById(id);
+        if (myUser == null) {
             throw new ApiException("Merchant ID not found");
         }
         myUserRepository.delete(myUser);
@@ -61,21 +76,5 @@ public class MyUserService {
     ///////////////////////////////////////////////////////////////////////
     //assign here
 
-//    public void assignMyUserToMerchant(MyUserDTO md){
-//        Merchant merchant = merchantRepository.findMerchantById(md.getId());
-//        if(merchant == null){
-//            throw new ApiException("merchant ID not found");
-//        }
-//        MyUser myUser = new MyUser(null,md.getUsername(),md.getPassword(),md.getEmail(),md.getPhone(),md.getCreatedAt(),md.getRole(),merchant,null);
-//        myUserRepository.save(myUser);
-//    }
-//    public void assignMyUserToCustomer(MyUserDTO md){
-//        Customer customer = customerRepository.findCustomerById(md.getId());
-//        if(customer == null){
-//            throw new ApiException("user ID not found");
-//        }
-//        MyUser myUser = new MyUser(null,md.getUsername(),md.getPassword(),md.getEmail(),md.getPhone(),md.getCreatedAt(),md.getRole(),null,customer);
-//        myUserRepository.save(myUser);
-//    }
 
 }

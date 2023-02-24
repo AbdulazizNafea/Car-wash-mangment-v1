@@ -28,11 +28,11 @@ public class MyUserController {
         return ResponseEntity.status(HttpStatus.OK).body(myUserService.getById(id));
     }
 
-    @PostMapping("/add")
-    public ResponseEntity add(@RequestBody @Valid MyUser myUser) {
-        myUserService.add(myUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
-    }
+//    @PostMapping("/add")
+//    public ResponseEntity add(@RequestBody @Valid MyUser myUser) {
+//        myUserService.add(myUser);
+//        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
+//    }
 
     @PutMapping("/update/{id}")
     public ResponseEntity update(@RequestBody @Valid MyUser myUser, @PathVariable Integer id) {
@@ -59,5 +59,21 @@ public class MyUserController {
 //        myUserService.assignMyUserToCustomer(md);
 //        return   ResponseEntity.status(200).body("Add Address Done");
 //    }
+
+    ///////////////////////\
+    @PostMapping("/register")
+    public ResponseEntity register(@RequestBody @Valid MyUser user){
+        myUserService.register(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body("User registered !");
+    }
+    @PostMapping("/login")
+    public ResponseEntity login(){
+        return ResponseEntity.status(HttpStatus.OK).body("Welcome back");
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity logout(){
+        return ResponseEntity.status(HttpStatus.OK).body("logout!");
+    }
 
 }

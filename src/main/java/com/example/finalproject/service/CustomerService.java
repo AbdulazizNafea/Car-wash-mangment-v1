@@ -21,8 +21,9 @@ public class CustomerService {
     public List<Customer> getAll(){
         return customerRepository.findAll();
     }
-    public Customer getById(Integer id){
-        Customer customer = customerRepository.findCustomerById(id);
+    public Customer get(Integer auth){
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+        Customer customer = customerRepository.findCustomerById(myUser.getId());
         if (customer == null) {
             throw new ApiException("Customer not found");
         }
@@ -33,16 +34,22 @@ public class CustomerService {
         customerRepository.save(customer);
     }
 
-    public void update(Customer customer,Integer id) {
-        Customer oldCustomer= customerRepository.findCustomerById(id);
+    public void update(Customer customer, Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+        Customer oldCustomer= customerRepository.findCustomerById(myUser.getCustomer().getId());
         if(oldCustomer == null){
             throw new ApiException("Customer ID not found");
+        }
+        if(oldCustomer.getMyUser().getId()!=auth){
+            throw new ApiException("Sorry , You do not have the authority to update this Todo!");
         }
 //        oldEmp.setId(employee.getId());
         oldCustomer.setFirstName(customer.getFirstName());
         oldCustomer.setLastName(customer.getLastName());
         oldCustomer.setAge(customer.getAge());
         oldCustomer.setGender(customer.getGender());
+        oldCustomer.setMyUser(myUser);
+        oldCustomer.getMyUser().setRole("Customer");
         customerRepository.save(oldCustomer);
     }
 
@@ -56,15 +63,19 @@ public class CustomerService {
 
     ///////////////////////////////////////////////////////////////////////////
     //All assign
-    public void assignCustomerToMyUser(CustomerDTO cd){
-        MyUser myUser = myUserRepository.findMyUserById(cd.getId());
+    public void assignCustomerToMyUser(CustomerDTO cd, Integer auth){
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+
         if(myUser == null){
             throw new ApiException("user ID not found");
+        }
+        if (myUser.getCustomer()!= null){
+            throw new ApiException("Customer Already Exist!!!!");
         }
         if(!myUser.getRole().equalsIgnoreCase("Customer")){
             throw new ApiException("your role not Customer");
         }
-        Customer myCustomer = new Customer(null,cd.getFirstName(),cd.getLastName(),cd.getAge(),cd.getGender(),myUser,null,null);
+        Customer myCustomer = new Customer(null,cd.getFirstName(),cd.getLastName(),cd.getAge(),cd.getGender(),myUser,null,null,null);
         customerRepository.save(myCustomer);
     }
 }

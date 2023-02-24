@@ -41,9 +41,11 @@ public class Merchant {
     private MyUser myUser;
 
 
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "merchant")
-//    private List<Point> point;
-//
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "merchant")
+    private List<Point> point;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "merchant")
+    private List<Bill> bill;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "merchant")
     private List<Branch> branch;
 }
