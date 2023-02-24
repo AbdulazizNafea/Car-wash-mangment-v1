@@ -1,7 +1,12 @@
 package com.example.finalproject.service;
 
 import com.example.finalproject.apiException.ApiException;
+import com.example.finalproject.model.Bill;
+import com.example.finalproject.model.Branch;
+import com.example.finalproject.model.Employee;
 import com.example.finalproject.model.ServicesProduct;
+import com.example.finalproject.repository.BillRepository;
+import com.example.finalproject.repository.BranchRepository;
 import com.example.finalproject.repository.ServicesProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +18,8 @@ import java.util.List;
 public class ServicesProductService {
 
     private final ServicesProductRepository servicesProductRepository;
+    private final BranchRepository branchRepository;
+    private final BillRepository billRepository;
 
 
     //////////////////////////////////////////////////
@@ -56,5 +63,18 @@ public class ServicesProductService {
     }
     ///////////////////////////////////////////////////
     // assign here
+
+    public void addServicesToBranch(ServicesProduct sp, Integer branchId){
+        Branch branch = branchRepository.findBranchById(branchId);
+        if (branch == null ) {
+            throw new ApiException("Branch ID not found");
+        }
+        if(!branch.getMerchant().getMyUser().getRole().equalsIgnoreCase("merchant")){
+            throw new ApiException("Your role isn't merchant");
+        }
+        sp.setBranch(branch);
+        servicesProductRepository.save(sp);
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package com.example.finalproject.controller;
 
+import com.example.finalproject.model.Employee;
 import com.example.finalproject.model.ServicesProduct;
 import com.example.finalproject.service.ServicesProductService;
 import jakarta.validation.Valid;
@@ -43,4 +44,14 @@ public class ServicesProductController {
         servicesProductService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("DELETED");
     }
+
+    //////////////////////////////////
+    //Assign here
+    @PostMapping("/addServices/{branchId}")
+    public ResponseEntity addServicesToBranch(@RequestBody @Valid ServicesProduct sp, @PathVariable Integer branchId) {
+        servicesProductService.addServicesToBranch(sp,branchId);
+        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
+    }
+
+
 }

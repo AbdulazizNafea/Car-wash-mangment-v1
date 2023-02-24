@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -21,26 +22,27 @@ public class Branch {
     private String name;
     private String email;
     private String phone;
-    private Date created;
+    private LocalDate created;
 
     @ManyToOne
     @JoinColumn(name = "merchant_id", referencedColumnName = "id")
     @JsonIgnore
     private Merchant merchant;
 
-//    @OneToOne(cascade = CascadeType.ALL , mappedBy = "branch")
-//    @PrimaryKeyJoinColumn
-//    private Feature feature;
-//
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
-//    private List<Employee> employees;
-//
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
-//    private List<ServicesProduct> servicesProducts;
-//
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
-//    private List<Rating> ratings;
-//
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
+    private List<Feature> features;
+
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
+    private List<Employee> employees;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
+    private List<ServicesProduct> servicesProducts;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
+    private List<Rating> ratings;
+
 //    @ManyToMany
 //    @JsonIgnore
 //    List<Customer> clint;

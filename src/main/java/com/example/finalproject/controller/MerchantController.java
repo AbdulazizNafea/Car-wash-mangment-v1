@@ -1,5 +1,8 @@
 package com.example.finalproject.controller;
 
+import com.example.finalproject.DTO.MerchantDTO;
+import com.example.finalproject.DTO.MyUserDTO;
+import com.example.finalproject.model.Branch;
 import com.example.finalproject.model.Merchant;
 import com.example.finalproject.service.MerchantService;
 import jakarta.validation.Valid;
@@ -26,11 +29,11 @@ public class MerchantController {
         return ResponseEntity.status(HttpStatus.OK).body(merchantService.getById(id));
     }
 
-    @PostMapping("/add")
-    public ResponseEntity add(@RequestBody @Valid Merchant merchant) {
-        merchantService.add(merchant);
-        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
-    }
+//    @PostMapping("/add")
+//    public ResponseEntity add(@RequestBody @Valid Merchant merchant) {
+//        merchantService.add(merchant);
+//        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
+//    }
 
     @PutMapping("/update/{id}")
     public ResponseEntity update(@RequestBody @Valid Merchant merchant, @PathVariable Integer id) {
@@ -43,4 +46,26 @@ public class MerchantController {
         merchantService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("DELETED");
     }
+    //////////////////////////////////////
+    //assign here
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////
+    //this is correct                                                             //
+//    @PostMapping("/assignM")                                                   //
+//    public ResponseEntity assignM(@RequestBody @Valid MyUserDTO md) {             //
+//        merchantService.assignMyUserToMerchant(md);                               //
+//        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");         //
+//    }                                                                             //
+///////////////////////////////////////////////////////////////////////////////////
+
+
+    @PostMapping("/assignU")
+    public ResponseEntity assignU(@RequestBody @Valid MerchantDTO md) {
+        merchantService.assignMyUserToMerchant2(md);
+        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
+    }
+
 }

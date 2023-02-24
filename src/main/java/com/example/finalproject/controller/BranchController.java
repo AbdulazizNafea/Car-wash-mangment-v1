@@ -41,4 +41,11 @@ public class BranchController {
         branchService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("DELETED");
     }
+    /////////////////////////////////////////////////////
+    //Assign here
+    @PostMapping("/assignBranch/{merchantId}")
+    public ResponseEntity assignBranch(@RequestBody @Valid Branch branch, @PathVariable Integer merchantId) {
+        branchService.addBranchToMerchant(branch,merchantId);
+        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
+    }
 }

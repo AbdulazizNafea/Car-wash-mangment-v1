@@ -1,8 +1,11 @@
 package com.example.finalproject.service;
 
 import com.example.finalproject.apiException.ApiException;
+import com.example.finalproject.model.Branch;
 import com.example.finalproject.model.Employee;
+import com.example.finalproject.model.Feature;
 import com.example.finalproject.model.MyUser;
+import com.example.finalproject.repository.BranchRepository;
 import com.example.finalproject.repository.EmployeeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
+    private final BranchRepository branchRepository;
 
     public List<Employee> getAll(){
         return employeeRepository.findAll();
@@ -47,5 +51,20 @@ public class EmployeeService {
             throw new ApiException("Employee ID not found");
         }
         employeeRepository.delete(oldEmp);
+    }
+
+    ///////////////////////////////////////////////////
+    // assign here
+
+    public void addEmployeeToBranch(Employee employee, Integer branchId){
+        Branch branch = branchRepository.findBranchById(branchId);
+        if (branch == null ) {
+            throw new ApiException("Branch ID not found");
+        }
+        if(!branch.getMerchant().getMyUser().getRole().equalsIgnoreCase("merchant")){
+            throw new ApiException("Your role isn't merchant");
+        }
+        employee.setBranch(branch);
+        employeeRepository.save(employee);
     }
 }

@@ -43,4 +43,22 @@ public class BillController {
         billServices.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("DELETED");
     }
+    //////////////////////////////////////
+    //Assign here
+    @PostMapping("/addServicesToBill/{spId}/{billId}")
+    public ResponseEntity addServicesToBill(@PathVariable Integer billId ,@PathVariable Integer spId) {
+        billServices.addServicesToBill(spId,billId);
+        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
+    }
+    @PutMapping("/removeServicesFromBill/{spId}/{billId}")
+    public ResponseEntity removeServicesFromBill(@PathVariable Integer billId , @PathVariable Integer spId) {
+        billServices.removeServicesFromBill(spId,billId);
+        return ResponseEntity.status(HttpStatus.CREATED).body("removed");
+    }
+
+    @PostMapping("/addBillToCustomer/{billId}/{customerId}")
+    public ResponseEntity addBillToCustomer(@PathVariable Integer customerId,@PathVariable Integer billId) {
+        billServices.addBillToCustomer(customerId,billId);
+        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
+    }
 }

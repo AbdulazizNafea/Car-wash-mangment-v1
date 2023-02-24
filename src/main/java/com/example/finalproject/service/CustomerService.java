@@ -1,9 +1,12 @@
 package com.example.finalproject.service;
 
+import com.example.finalproject.DTO.CustomerDTO;
 import com.example.finalproject.apiException.ApiException;
 import com.example.finalproject.model.Customer;
 import com.example.finalproject.model.Employee;
+import com.example.finalproject.model.MyUser;
 import com.example.finalproject.repository.CustomerRepository;
+import com.example.finalproject.repository.MyUserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CustomerService {
     private final CustomerRepository customerRepository;
+    private final MyUserRepository myUserRepository;
 
     public List<Customer> getAll(){
         return customerRepository.findAll();
@@ -48,5 +52,19 @@ public class CustomerService {
             throw new ApiException("Customer ID not found");
         }
         customerRepository.delete(customer);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    //All assign
+    public void assignCustomerToMyUser(CustomerDTO cd){
+        MyUser myUser = myUserRepository.findMyUserById(cd.getId());
+        if(myUser == null){
+            throw new ApiException("user ID not found");
+        }
+        if(!myUser.getRole().equalsIgnoreCase("Customer")){
+            throw new ApiException("your role not Customer");
+        }
+        Customer myCustomer = new Customer(null,cd.getFirstName(),cd.getLastName(),cd.getAge(),cd.getGender(),myUser,null,null);
+        customerRepository.save(myCustomer);
     }
 }

@@ -3,15 +3,19 @@ package com.example.finalproject.service;
 import com.example.finalproject.apiException.ApiException;
 import com.example.finalproject.model.Branch;
 import com.example.finalproject.model.Car;
+import com.example.finalproject.model.Merchant;
 import com.example.finalproject.repository.BranchRepository;
+import com.example.finalproject.repository.MerchantRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 @Service
 @AllArgsConstructor
 public class BranchService {
     private final BranchRepository branchRepository;
+    private final MerchantRepository merchantRepository;
 
     public List<Branch> getAll(){
         return branchRepository.findAll();
@@ -47,4 +51,19 @@ public class BranchService {
         }
         branchRepository.delete(oldBranch);
     }
+    /////////////////////////////////////////////////
+    //assign here
+
+    public void addBranchToMerchant(Branch branch, Integer merchantId){
+        Merchant merchant = merchantRepository.findMerchantById(merchantId);
+        if (merchant == null ) {
+            throw new ApiException("merchant ID not found");
+        }
+        branch.setMerchant(merchant);
+        branch.setCreated(LocalDate.now());
+        branchRepository.save(branch);
+    }
+
+
+
 }

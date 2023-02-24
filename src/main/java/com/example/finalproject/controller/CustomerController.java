@@ -1,5 +1,7 @@
 package com.example.finalproject.controller;
 
+import com.example.finalproject.DTO.CustomerDTO;
+import com.example.finalproject.DTO.MerchantDTO;
 import com.example.finalproject.model.Customer;
 import com.example.finalproject.model.Employee;
 import com.example.finalproject.service.CustomerService;
@@ -41,4 +43,14 @@ public class CustomerController {
         customerService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("DELETED");
     }
+
+    /////////////////////
+    //Assign here
+    @PostMapping("/addCustomer")
+    public ResponseEntity addCustomer(@RequestBody @Valid CustomerDTO cd) {
+        customerService.assignCustomerToMyUser(cd);
+        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
+    }
+
+
 }

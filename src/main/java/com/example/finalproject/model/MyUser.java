@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Entity
+//@Table(name = "myUser")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,7 +21,6 @@ public class MyUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-//    @Column(unique = true)
     private String username;
     private String password;
     private String email;
@@ -29,10 +29,11 @@ public class MyUser {
     private String role;
 
 
-//    @OneToOne(cascade = CascadeType.ALL, mappedBy = "myUser")
-//    @JoinColumn(name = "myUser_id")
+//    @OneToOne(cascade = CascadeType.ALL,mappedBy = "myUser")
+////    @JoinColumn(name = "merchant_id", referencedColumnName="id")
 //    @PrimaryKeyJoinColumn
 //    private Merchant merchant;
+
 //    @OneToOne
 //    @MapsId
 //    @JsonIgnore
@@ -43,14 +44,23 @@ public class MyUser {
 //    @JsonIgnore
 //    private Customer customer;
 
+    /*
+    //this is correct
+    @OneToOne
+    @MapsId
+    @JsonIgnore
+    private Merchant merchant;
+
+     */
 
 
-//    @OneToOne(cascade = CascadeType.ALL, mappedBy = "myUser")
-//    @PrimaryKeyJoinColumn
-//    private Customer customer;
-//
-//    @OneToOne(cascade = CascadeType.ALL, mappedBy = "myUser")
-//    @PrimaryKeyJoinColumn
-//    private Merchant merchant;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "myUser")
+    @PrimaryKeyJoinColumn
+    private Customer customer;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "myUser")
+    @PrimaryKeyJoinColumn
+    private Merchant merchant;
 
 }
