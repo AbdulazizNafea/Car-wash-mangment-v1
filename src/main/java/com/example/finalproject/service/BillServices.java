@@ -2,9 +2,7 @@ package com.example.finalproject.service;
 
 import com.example.finalproject.apiException.ApiException;
 import com.example.finalproject.model.*;
-import com.example.finalproject.repository.BillRepository;
-import com.example.finalproject.repository.CustomerRepository;
-import com.example.finalproject.repository.ServicesProductRepository;
+import com.example.finalproject.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +16,8 @@ public class BillServices {
     private final BillRepository billRepository;
     private final ServicesProductRepository servicesProductRepository;
     private final CustomerRepository customerRepository;
+    private  final MerchantRepository merchantRepository;
+    private final PointRepository pointRepository;
 
 
     //////////////////////////////////////////////////
@@ -103,15 +103,26 @@ public class BillServices {
 
     }
 
-    public void addBillToCustomer(Integer customerId,Integer billId){
+    public void addBillToCustomerAndMerchant(Integer customerId, Integer merchantId,Integer billId){
         Bill bill = billRepository.findBillById(billId);
         Customer customer = customerRepository.findCustomerById(customerId);
+        Merchant merchant = merchantRepository.findMerchantById(merchantId);
+        Point point = pointRepository.findPointByCustomerIdAndMerchantId(customerId, merchantId);
+        if (point == null) {
+            throw new ApiException("can't add points");
+        }
         if(bill == null){
             throw new ApiException("Bill ID not found");
         } else if (customer == null ) {
             throw new ApiException("Customer ID not found");
+        }else if (merchant == null) {
+            throw new ApiException("Merchant ID not found");
+
         }
+        point.setPoints(bill.getTotalPoints());
+        bill.setMerchant(merchant);
         bill.setCustomer(customer);
         billRepository.save(bill);
+        pointRepository.save(point);
     }
 }

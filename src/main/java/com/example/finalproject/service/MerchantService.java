@@ -11,6 +11,7 @@ import com.example.finalproject.repository.BranchRepository;
 import com.example.finalproject.repository.MyUserRepository;
 import com.example.finalproject.repository.MerchantRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -33,6 +34,14 @@ public class MerchantService {
         }
         return merchant;
     }
+    public Merchant get(Integer auth){
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+        Merchant merchant = merchantRepository.findMerchantById(myUser.getMerchant().getId());
+        if (merchant == null) {
+            throw new ApiException("User not found");
+        }
+        return merchant;
+    }
 
 //    public void add(Merchant merchant){
 //        merchantRepository.save(merchant);
@@ -50,7 +59,7 @@ public class MerchantService {
 
     public void delete(Integer id) {
         Merchant merchant= merchantRepository.findMerchantById(id);
-        if(merchant == null){
+       if(merchant == null){
             throw new ApiException("Merchant ID not found");
         }
         merchantRepository.delete(merchant);
@@ -71,19 +80,30 @@ public class MerchantService {
 //    }
 
     ////////this is the correct practice in my opinion\\\\\\\\\\\\\\
-    public void assignMyUserToMerchant2(MerchantDTO md){
-        MyUser myUser = myUserRepository.findMyUserById(md.getId());
+    public void assignMyUserToMerchant2(MerchantDTO md, Integer auth){
+
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+        if(!myUser.getRole().equalsIgnoreCase("Merchant")){
+            throw new ApiException("This Page Only For Merchants!!!!");
+        }
+        if (myUser.getMerchant() != null){
+            throw new ApiException("Merchants werk!!!!");
+        }
         if(myUser == null){
             throw new ApiException("user ID not found");
         }
         if(!myUser.getRole().equalsIgnoreCase("Merchant")){
             throw new ApiException("your role not merchant");
         }
-        Merchant myMerchant = new Merchant(null,md.getCompany_name(),md.getCommercial_record(),myUser,null);
+        Merchant myMerchant = new Merchant(null,md.getCompany_name(),md.getCommercial_record(),myUser,null,null,null);
         merchantRepository.save(myMerchant);
     }
 
 
+    /*
+    if point by id ->
+    pointr .getCustomer == id c && merchant id == point.get merchant id
+     */
 
 
 }

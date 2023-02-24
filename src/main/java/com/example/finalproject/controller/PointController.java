@@ -1,5 +1,6 @@
 package com.example.finalproject.controller;
 
+import com.example.finalproject.DTO.RatingDTO;
 import com.example.finalproject.model.Point;
 import com.example.finalproject.service.PointService;
 import jakarta.validation.Valid;
@@ -42,5 +43,13 @@ public class PointController {
     public ResponseEntity delete(@PathVariable Integer id) {
         pointService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("DELETED");
+    }
+
+    ///////////////////////////
+    //ASSIGN HERE
+    @PostMapping("/assignPointToCustomerAndMerchant/{customerId}/merchant/{MerchantId}")
+    public ResponseEntity assignPointToCustomerAndMerchant(@RequestBody Point point,@PathVariable Integer customerId,@PathVariable Integer MerchantId) {
+        pointService.assignPointToCustomerAndMerchant(point,customerId,MerchantId);
+        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 }

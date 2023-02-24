@@ -4,6 +4,7 @@ import com.example.finalproject.apiException.ApiException;
 import com.example.finalproject.model.*;
 import com.example.finalproject.repository.CarRepository;
 import com.example.finalproject.repository.CustomerRepository;
+import com.example.finalproject.repository.MyUserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +15,15 @@ import java.util.List;
 public class CarService {
     private final CarRepository carRepository;
     private final CustomerRepository customerRepository;
+    private final MyUserRepository myUserRepository;
 
 
     public List<Car> getAll(){
         return carRepository.findAll();
     }
-    public Car getById(Integer id){
-        Car car = carRepository.findCarById(id);
+    public List<Car> get(Integer auth){
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+        List<Car> car = carRepository.findAllCarByCustomerId(myUser.getId());
         if (car == null) {
             throw new ApiException("Car not found");
         }
@@ -31,10 +34,15 @@ public class CarService {
         carRepository.save(car);
     }
 
-    public void update(Car car,Integer id) {
-        Car oldCar= carRepository.findCarById(id);
+    public void update(Car car,Integer carId,Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+//        Car oldCar= carRepository.findCarByCustomerId(myUser.getCustomer().getId());
+        Car oldCar =carRepository.findCarById(carId);
         if(oldCar == null){
             throw new ApiException("Car ID not found");
+        }
+        if(oldCar.getCustomer().getMyUser().getId()!=auth){
+            throw new ApiException("Sorry , You do not have the authority to update this Car!");
         }
 //        oldEmp.setId(employee.getId());
         oldCar.setCarType(car.getCarType());
@@ -53,8 +61,9 @@ public class CarService {
 
     ////////////////////////////////////////////////////////////
     //Assign here
-    public void addCarToCustomer(Car car, Integer customerId){
-        Customer customer =customerRepository.findCustomerById(customerId);
+    public void addCarToCustomer(Car car, Integer auth){
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+        Customer customer =customerRepository.findCustomerById(myUser.getCustomer().getId());
         if (customer == null ) {
             throw new ApiException("customer ID not found");
         }

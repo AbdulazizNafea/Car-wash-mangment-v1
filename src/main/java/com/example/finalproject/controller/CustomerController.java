@@ -4,11 +4,13 @@ import com.example.finalproject.DTO.CustomerDTO;
 import com.example.finalproject.DTO.MerchantDTO;
 import com.example.finalproject.model.Customer;
 import com.example.finalproject.model.Employee;
+import com.example.finalproject.model.MyUser;
 import com.example.finalproject.service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,9 +23,9 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.getAll());
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity getById(@PathVariable Integer id) {
-        return ResponseEntity.status(HttpStatus.OK).body(customerService.getById(id));
+    @GetMapping("/get")
+    public ResponseEntity getById( @AuthenticationPrincipal MyUser myUser) {
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.get(myUser.getId()));
     }
 
     @PostMapping("/add")
@@ -32,9 +34,9 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity update(@RequestBody @Valid Customer customer, @PathVariable Integer id) {
-        customerService.update(customer, id);
+    @PutMapping("/update")
+    public ResponseEntity update(@RequestBody @Valid Customer customer, @AuthenticationPrincipal MyUser myUser) {
+        customerService.update(customer, myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("UPDATED");
     }
 
@@ -47,8 +49,8 @@ public class CustomerController {
     /////////////////////
     //Assign here
     @PostMapping("/addCustomer")
-    public ResponseEntity addCustomer(@RequestBody @Valid CustomerDTO cd) {
-        customerService.assignCustomerToMyUser(cd);
+    public ResponseEntity addCustomer(@RequestBody @Valid CustomerDTO cd, @AuthenticationPrincipal MyUser myUser) {
+        customerService.assignCustomerToMyUser(cd, myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 

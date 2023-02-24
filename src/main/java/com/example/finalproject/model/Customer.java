@@ -35,16 +35,8 @@ public class Customer {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     private List<Car> car;
 
-//    @OneToOne(cascade = CascadeType.ALL, mappedBy = "customer")
-//    @PrimaryKeyJoinColumn
-//    private MyUser myUser;
-
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-//    private List<Point> point;
-//
-//
-
-//
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    private List<Point> point;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     private List<Bill> bill;
 

@@ -31,6 +31,11 @@ public class Bill {
     @JsonIgnore
     private Customer customer;
 
+    @ManyToOne
+    @JoinColumn(name = "merchant_id", referencedColumnName ="id")
+    @JsonIgnore
+    private Merchant merchant;
+
 
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "bill")
     //Remember if you want to delete any child use this

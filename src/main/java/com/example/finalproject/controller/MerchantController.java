@@ -4,12 +4,14 @@ import com.example.finalproject.DTO.MerchantDTO;
 import com.example.finalproject.DTO.MyUserDTO;
 import com.example.finalproject.model.Branch;
 import com.example.finalproject.model.Merchant;
+import com.example.finalproject.model.MyUser;
 import com.example.finalproject.service.MerchantService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,6 +30,11 @@ public class MerchantController {
     public ResponseEntity getById(@PathVariable Integer id){
         return ResponseEntity.status(HttpStatus.OK).body(merchantService.getById(id));
     }
+    @GetMapping("/get")
+    public ResponseEntity getById( @AuthenticationPrincipal MyUser myUser){
+        return ResponseEntity.status(HttpStatus.OK).body(merchantService.getById(myUser.getId()));
+    }
+
 
 //    @PostMapping("/add")
 //    public ResponseEntity add(@RequestBody @Valid Merchant merchant) {
@@ -63,8 +70,8 @@ public class MerchantController {
 
 
     @PostMapping("/assignU")
-    public ResponseEntity assignU(@RequestBody @Valid MerchantDTO md) {
-        merchantService.assignMyUserToMerchant2(md);
+    public ResponseEntity assignU(@RequestBody @Valid MerchantDTO md,@AuthenticationPrincipal MyUser myUser) {
+        merchantService.assignMyUserToMerchant2(md,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 

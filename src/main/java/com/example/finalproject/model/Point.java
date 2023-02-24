@@ -16,17 +16,17 @@ public class Point {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer points;
+    private double points;
 
-//    @ManyToOne
-//    @JoinColumn(name = "merchant_id", referencedColumnName ="id")
-//    @JsonIgnore
-//    private Merchant merchant;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "customer_id", referencedColumnName ="id")
-//    @JsonIgnore
-//    private Customer customer;
-//
-//
+    @ManyToOne
+    @JoinColumn(name = "merchant_id", referencedColumnName ="id")
+    @JsonIgnore
+    private Merchant merchant;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id", referencedColumnName ="id")
+    @JsonIgnore
+    private Customer customer;
+
+
 }

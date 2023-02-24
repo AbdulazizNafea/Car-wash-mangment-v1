@@ -6,6 +6,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 
 import java.time.LocalDate;
@@ -17,7 +21,7 @@ import java.util.Collections;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MyUser {
+public class MyUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -28,33 +32,6 @@ public class MyUser {
     private LocalDate createdAt;
     private String role;
 
-
-//    @OneToOne(cascade = CascadeType.ALL,mappedBy = "myUser")
-////    @JoinColumn(name = "merchant_id", referencedColumnName="id")
-//    @PrimaryKeyJoinColumn
-//    private Merchant merchant;
-
-//    @OneToOne
-//    @MapsId
-//    @JsonIgnore
-//    private Merchant merchant;
-
-//    @OneToOne
-//    @MapsId
-//    @JsonIgnore
-//    private Customer customer;
-
-    /*
-    //this is correct
-    @OneToOne
-    @MapsId
-    @JsonIgnore
-    private Merchant merchant;
-
-     */
-
-
-
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "myUser")
     @PrimaryKeyJoinColumn
     private Customer customer;
@@ -63,4 +40,29 @@ public class MyUser {
     @PrimaryKeyJoinColumn
     private Merchant merchant;
 
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(new SimpleGrantedAuthority(this.role));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

@@ -1,7 +1,11 @@
 package com.example.finalproject.service;
 
 import com.example.finalproject.apiException.ApiException;
+import com.example.finalproject.model.Customer;
+import com.example.finalproject.model.Merchant;
 import com.example.finalproject.model.Point;
+import com.example.finalproject.repository.CustomerRepository;
+import com.example.finalproject.repository.MerchantRepository;
 import com.example.finalproject.repository.PointRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +17,8 @@ import java.util.List;
 public class PointService {
 
     private final PointRepository pointRepository;
+    private final CustomerRepository customRepository;
+    private final MerchantRepository merchantRepository;
 
 
     //////////////////////////////////////////////////
@@ -51,5 +57,31 @@ public class PointService {
     }
     ///////////////////////////////////////////////////
     // assign here
+
+    public void assignPointToCustomerAndMerchant(Point newPoint, Integer customerId,Integer merchantId){
+        Customer customer = customRepository.findCustomerById(customerId);
+        Merchant merchant = merchantRepository.findMerchantById(merchantId);
+        Point point = pointRepository.findPointByCustomerIdAndMerchantId(customerId, merchantId);
+        if(point != null){
+            throw new ApiException("Already added");
+        }
+
+        if(merchant == null){
+            throw new ApiException("Merchant not found");
+        }
+
+        if(customer == null){
+            throw new ApiException("Customer not found");
+        }
+//        if(newPoint.getCustomer().getId() == customerId && newPoint.getMerchant().getId() == merchantId){
+//            throw new ApiException("U cant add customer to same merchant");
+//        }
+        newPoint.setCustomer(customer);
+        newPoint.setMerchant(merchant);
+        newPoint.setPoints(0);
+        pointRepository.save(newPoint);
+
+    }
+
 
 }

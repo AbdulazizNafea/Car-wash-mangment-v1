@@ -56,9 +56,9 @@ public class BillController {
         return ResponseEntity.status(HttpStatus.CREATED).body("removed");
     }
 
-    @PostMapping("/addBillToCustomer/{billId}/{customerId}")
-    public ResponseEntity addBillToCustomer(@PathVariable Integer customerId,@PathVariable Integer billId) {
-        billServices.addBillToCustomer(customerId,billId);
+    @PostMapping("/addBillToCustomer/{billId}/customer/{customerId}/merchant/{merchantId}")
+    public ResponseEntity addBillToCustomer(@PathVariable Integer customerId,@PathVariable Integer billId, @PathVariable Integer merchantId) {
+        billServices.addBillToCustomerAndMerchant(customerId,merchantId,billId);
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 }
