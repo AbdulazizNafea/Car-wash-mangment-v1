@@ -5,5 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FeatureRepository extends JpaRepository<Feature,Integer> {
     public Feature findFeatureById(Integer id);
+    public Feature findFeatureByBranchId(Integer branchId);
 }
 

@@ -1,12 +1,14 @@
 package com.example.finalproject.controller;
 
 import com.example.finalproject.DTO.RatingDTO;
+import com.example.finalproject.model.MyUser;
 import com.example.finalproject.model.Point;
 import com.example.finalproject.service.PointService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,6 +27,10 @@ public class PointController {
     @GetMapping("/get/{id}")
     public ResponseEntity getById(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(pointService.getById(id));
+    }
+    @GetMapping("/get")
+    public ResponseEntity getById(@AuthenticationPrincipal MyUser myUser) {
+        return ResponseEntity.status(HttpStatus.OK).body(pointService.getMyPoint(myUser.getId()));
     }
 
     @PostMapping("/add")
@@ -47,9 +53,9 @@ public class PointController {
 
     ///////////////////////////
     //ASSIGN HERE
-    @PostMapping("/assignPointToCustomerAndMerchant/{customerId}/merchant/{MerchantId}")
-    public ResponseEntity assignPointToCustomerAndMerchant(@RequestBody Point point,@PathVariable Integer customerId,@PathVariable Integer MerchantId) {
-        pointService.assignPointToCustomerAndMerchant(point,customerId,MerchantId);
+    @PostMapping("/assignPointToCustomerAndMerchant/Customer/{customerId}")
+    public ResponseEntity assignPointToCustomerAndMerchant(@RequestBody Point point,@PathVariable Integer customerId,@AuthenticationPrincipal MyUser myUser) {
+        pointService.assignPointToCustomerAndMerchant(point,customerId,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 }

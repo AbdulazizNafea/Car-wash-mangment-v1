@@ -1,15 +1,11 @@
 package com.example.finalproject.service;
 
-import com.example.finalproject.DTO.MyUserDTO;
 import com.example.finalproject.apiException.ApiException;
-import com.example.finalproject.model.Customer;
-import com.example.finalproject.model.Merchant;
 import com.example.finalproject.model.MyUser;
 import com.example.finalproject.repository.CustomerRepository;
 import com.example.finalproject.repository.MerchantRepository;
 import com.example.finalproject.repository.MyUserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,19 +26,13 @@ public class MyUserService {
         return myUserRepository.findAll();
     }
 
-    public MyUser getById(Integer id) {
-        MyUser myUser = myUserRepository.findMyUserById(id);
+    public MyUser getMyUser(Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
         if (myUser == null) {
             throw new ApiException("User not found");
         }
         return myUser;
     }
-
-//    public void add(MyUser myUser){
-//        LocalDate date =  LocalDate.now();
-//        myUser.setCreatedAt(date);
-//        myUserRepository.save(myUser);
-//    }
 
     //register user
     public void register(MyUser user) {
@@ -59,7 +49,7 @@ public class MyUserService {
     public void update(MyUser newMyUser, Integer id) {
         MyUser myUser = myUserRepository.findMyUserById(id);
         if (myUser == null) {
-            throw new ApiException("Merchant ID not found");
+            throw new ApiException("User ID not found");
         }
         myUserRepository.save(myUser);
     }
@@ -67,14 +57,8 @@ public class MyUserService {
     public void delete(Integer id) {
         MyUser myUser = myUserRepository.findMyUserById(id);
         if (myUser == null) {
-            throw new ApiException("Merchant ID not found");
+            throw new ApiException("User ID not found");
         }
         myUserRepository.delete(myUser);
     }
-
-
-    ///////////////////////////////////////////////////////////////////////
-    //assign here
-
-
 }

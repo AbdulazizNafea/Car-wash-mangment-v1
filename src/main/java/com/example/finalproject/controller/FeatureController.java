@@ -1,11 +1,13 @@
 package com.example.finalproject.controller;
 
 import com.example.finalproject.model.Feature;
+import com.example.finalproject.model.MyUser;
 import com.example.finalproject.service.FeatureService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,9 +23,9 @@ public class FeatureController {
         return ResponseEntity.status(HttpStatus.OK).body(featureService.getAll());
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity getById(@PathVariable Integer id) {
-        return ResponseEntity.status(HttpStatus.OK).body(featureService.getById(id));
+    @GetMapping("/getFeatureByBranchId/{id}")
+    public ResponseEntity getFeatureByBranchId(@PathVariable Integer id) {
+        return ResponseEntity.status(HttpStatus.OK).body(featureService.getFeatureByBranchId(id));
     }
 
 //    @PostMapping("/add")
@@ -32,22 +34,22 @@ public class FeatureController {
 //        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
 //    }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity update(@RequestBody @Valid Feature feature, @PathVariable Integer id) {
-        featureService.update(feature, id);
+    @PutMapping("/merchant/update/{id}")
+    public ResponseEntity update(@RequestBody @Valid Feature feature, @PathVariable Integer id, @AuthenticationPrincipal MyUser myUser) {
+        featureService.update(feature, id,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("UPDATED");
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity delete(@PathVariable Integer id) {
-        featureService.delete(id);
+    @DeleteMapping("/merchant/delete/{id}")
+    public ResponseEntity delete(@PathVariable Integer id, @AuthenticationPrincipal MyUser myUser) {
+        featureService.delete(id,myUser.getId());
         return ResponseEntity.status(HttpStatus.OK).body("DELETED");
     }
     //////////////////////////////////
     //Assign here
-    @PostMapping("/addFeature/{branchId}")
-    public ResponseEntity addCustomer(@RequestBody @Valid Feature feature,@PathVariable Integer branchId) {
-        featureService.assignFeatureToBranch(feature,branchId);
+    @PostMapping("/merchant/addFeature/{branchId}")
+    public ResponseEntity addCustomer(@RequestBody @Valid Feature feature, @PathVariable Integer branchId, @AuthenticationPrincipal MyUser myUser) {
+        featureService.assignFeatureToBranch(feature,branchId,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 }

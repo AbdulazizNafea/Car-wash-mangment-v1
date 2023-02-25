@@ -26,13 +26,9 @@ public class MerchantController {
         return ResponseEntity.status(HttpStatus.OK).body(merchantService.getAll());
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity getById(@PathVariable Integer id){
-        return ResponseEntity.status(HttpStatus.OK).body(merchantService.getById(id));
-    }
     @GetMapping("/get")
-    public ResponseEntity getById( @AuthenticationPrincipal MyUser myUser){
-        return ResponseEntity.status(HttpStatus.OK).body(merchantService.getById(myUser.getId()));
+    public ResponseEntity get( @AuthenticationPrincipal MyUser myUser){
+        return ResponseEntity.status(HttpStatus.OK).body(merchantService.get(myUser.getId()));
     }
 
 
@@ -42,9 +38,9 @@ public class MerchantController {
 //        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
 //    }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity update(@RequestBody @Valid Merchant merchant, @PathVariable Integer id) {
-        merchantService.update(merchant,id);
+    @PutMapping("/update")
+    public ResponseEntity update(@RequestBody @Valid Merchant merchant, @AuthenticationPrincipal MyUser myUser) {
+        merchantService.update(merchant, myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("UPDATED");
     }
 
@@ -55,20 +51,6 @@ public class MerchantController {
     }
     //////////////////////////////////////
     //assign here
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////
-    //this is correct                                                             //
-//    @PostMapping("/assignM")                                                   //
-//    public ResponseEntity assignM(@RequestBody @Valid MyUserDTO md) {             //
-//        merchantService.assignMyUserToMerchant(md);                               //
-//        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");         //
-//    }                                                                             //
-///////////////////////////////////////////////////////////////////////////////////
-
-
     @PostMapping("/assignU")
     public ResponseEntity assignU(@RequestBody @Valid MerchantDTO md,@AuthenticationPrincipal MyUser myUser) {
         merchantService.assignMyUserToMerchant2(md,myUser.getId());

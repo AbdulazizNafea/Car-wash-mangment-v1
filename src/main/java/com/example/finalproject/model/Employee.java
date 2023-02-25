@@ -29,4 +29,10 @@ public class Employee {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
     private List<Rating> ratings;
+
+    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "employee")
+    //Remember if you want to delete any child use this
+    // orphanRemoval=true
+    // @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "bill" ,orphanRemoval=true)
+    private List<Bill> bill;
 }

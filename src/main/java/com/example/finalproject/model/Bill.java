@@ -51,5 +51,10 @@ public class Bill {
     @PrimaryKeyJoinColumn
     private Rating rating;
 
+    @ManyToOne
+    @JoinColumn(name = "employee_id", referencedColumnName ="id")
+    @JsonIgnore
+    private Employee employee;
+
 
 }

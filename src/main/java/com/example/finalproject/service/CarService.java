@@ -8,7 +8,6 @@ import com.example.finalproject.repository.MyUserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 @Service
 @AllArgsConstructor
@@ -23,8 +22,8 @@ public class CarService {
     }
     public List<Car> get(Integer auth){
         MyUser myUser = myUserRepository.findMyUserById(auth);
-        List<Car> car = carRepository.findAllCarByCustomerId(myUser.getId());
-        if (car == null) {
+        List<Car> car = carRepository.findAllCarByCustomerId(myUser.getCustomer().getId());
+        if (car.isEmpty()) {
             throw new ApiException("Car not found");
         }
         return car;
@@ -44,7 +43,6 @@ public class CarService {
         if(oldCar.getCustomer().getMyUser().getId()!=auth){
             throw new ApiException("Sorry , You do not have the authority to update this Car!");
         }
-//        oldEmp.setId(employee.getId());
         oldCar.setCarType(car.getCarType());
         oldCar.setBrand(car.getBrand());
         oldCar.setModel(car.getModel());

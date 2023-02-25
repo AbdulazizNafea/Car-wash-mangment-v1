@@ -24,7 +24,7 @@ public class CustomerController {
     }
 
     @GetMapping("/get")
-    public ResponseEntity getById( @AuthenticationPrincipal MyUser myUser) {
+    public ResponseEntity get( @AuthenticationPrincipal MyUser myUser) {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.get(myUser.getId()));
     }
 
