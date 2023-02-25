@@ -1,6 +1,5 @@
 package com.example.finalproject.service;
 
-import com.example.finalproject.DTO.CustomerDTO;
 import com.example.finalproject.apiException.ApiException;
 import com.example.finalproject.model.*;
 import com.example.finalproject.repository.BranchRepository;
@@ -24,46 +23,48 @@ public class FeatureService {
         return featureRepository.findAll();
     }
 
-    public Feature getById(Integer id){
-        Feature feature = featureRepository.findFeatureById(id);
+    public Feature getFeatureByBranchId(Integer id){
+        Feature feature = featureRepository.findFeatureByBranchId(id);
         if (feature == null) {
             throw new ApiException("feature not found");
         }
         return feature;
     }
 
-//    public void add(Feature feature){
-//        featureRepository.save(feature);
-//    }
 
-    public void update(Feature newFeature,Integer id) {
+    public void update(Feature newFeature,Integer id,Integer auth) {
         Feature feature= featureRepository.findFeatureById(id);
         if(feature == null){
             throw new ApiException("Feature ID not found");
+        }else if(feature.getBranch().getMerchant().getMyUser().getId() != auth){
+            throw new ApiException("Sorry , You do not have the authority!");
         }
         feature.setName(newFeature.getName());
         feature.setDescription(newFeature.getDescription());
         featureRepository.save(feature);
     }
 
-    public void delete(Integer id) {
+    public void delete(Integer id,Integer auth) {
         Feature feature= featureRepository.findFeatureById(id);
         if(feature == null){
             throw new ApiException("Feature ID not found");
+        }else if(feature.getBranch().getMerchant().getMyUser().getId() != auth){
+            throw new ApiException("Sorry , You do not have the authority!");
         }
         featureRepository.delete(feature);
     }
     ///////////////////////////////////////////////////
     // assign here
 
-    public void assignFeatureToBranch(Feature feature, Integer branchId){
+    public void assignFeatureToBranch(Feature feature, Integer branchId,Integer auth){
         Branch branch = branchRepository.findBranchById(branchId);
         if (branch == null ) {
             throw new ApiException("Branch ID not found");
         }
-        if(!branch.getMerchant().getMyUser().getRole().equalsIgnoreCase("merchant")){
-            throw new ApiException("Your role isn't merchant");
+        else if(branch.getMerchant().getMyUser().getId() != auth){
+            throw new ApiException("Sorry , You do not have the authority!");
         }
+
         feature.setBranch(branch);
         featureRepository.save(feature);
     }

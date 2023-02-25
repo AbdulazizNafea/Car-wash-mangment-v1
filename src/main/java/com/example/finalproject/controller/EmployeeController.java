@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +22,12 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.OK).body(employeeService.getAll());
     }
 
+    @GetMapping("/getMyEmployeeByBranchId/{branchId}")
+    public ResponseEntity getMyEmployeeByMerchant(@AuthenticationPrincipal MyUser myUser,@PathVariable Integer branchId) {
+        return ResponseEntity.status(HttpStatus.OK).body(employeeService.getMyEmployeeByBranchId(myUser.getId(),branchId));
+    }
+
+
     @GetMapping("/get/{id}")
     public ResponseEntity getById(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(employeeService.getById(id));
@@ -33,22 +40,22 @@ public class EmployeeController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity update(@RequestBody @Valid Employee employee, @PathVariable Integer id) {
-        employeeService.update(employee, id);
+    public ResponseEntity update(@RequestBody @Valid Employee employee, @PathVariable Integer id,@AuthenticationPrincipal MyUser myUser) {
+        employeeService.update(employee, id,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("UPDATED");
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity delete(@PathVariable Integer id) {
-        employeeService.delete(id);
+    public ResponseEntity delete(@PathVariable Integer id,@AuthenticationPrincipal MyUser myUser) {
+        employeeService.delete(id,myUser.getId());
         return ResponseEntity.status(HttpStatus.OK).body("DELETED");
     }
 
     //////////////////////////////////
     //Assign here
     @PostMapping("/addEmpolyee/{branchId}")
-    public ResponseEntity addCustomer(@RequestBody @Valid Employee employee, @PathVariable Integer branchId) {
-        employeeService.addEmployeeToBranch(employee,branchId);
+    public ResponseEntity addCustomer(@RequestBody @Valid Employee employee, @PathVariable Integer branchId,@AuthenticationPrincipal MyUser myUser) {
+        employeeService.addEmployeeToBranch(employee,branchId,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 }

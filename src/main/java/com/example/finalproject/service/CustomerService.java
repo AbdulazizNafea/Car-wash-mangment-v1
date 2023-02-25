@@ -3,7 +3,6 @@ package com.example.finalproject.service;
 import com.example.finalproject.DTO.CustomerDTO;
 import com.example.finalproject.apiException.ApiException;
 import com.example.finalproject.model.Customer;
-import com.example.finalproject.model.Employee;
 import com.example.finalproject.model.MyUser;
 import com.example.finalproject.repository.CustomerRepository;
 import com.example.finalproject.repository.MyUserRepository;
@@ -18,32 +17,32 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final MyUserRepository myUserRepository;
 
-    public List<Customer> getAll(){
+    public List<Customer> getAll() {
         return customerRepository.findAll();
     }
-    public Customer get(Integer auth){
+
+    public Customer get(Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
-        Customer customer = customerRepository.findCustomerById(myUser.getId());
+        Customer customer = customerRepository.findCustomerById(myUser.getCustomer().getId());
         if (customer == null) {
             throw new ApiException("Customer not found");
         }
         return customer;
     }
 
-    public void add(Customer customer){
+
+    public void add(Customer customer) {
         customerRepository.save(customer);
     }
 
     public void update(Customer customer, Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
-        Customer oldCustomer= customerRepository.findCustomerById(myUser.getCustomer().getId());
-        if(oldCustomer == null){
+        Customer oldCustomer = customerRepository.findCustomerById(myUser.getCustomer().getId());
+        if (oldCustomer == null) {
             throw new ApiException("Customer ID not found");
-        }
-        if(oldCustomer.getMyUser().getId()!=auth){
+        } else if (oldCustomer.getMyUser().getId() != auth) {
             throw new ApiException("Sorry , You do not have the authority to update this Todo!");
         }
-//        oldEmp.setId(employee.getId());
         oldCustomer.setFirstName(customer.getFirstName());
         oldCustomer.setLastName(customer.getLastName());
         oldCustomer.setAge(customer.getAge());
@@ -54,8 +53,8 @@ public class CustomerService {
     }
 
     public void delete(Integer id) {
-        Customer customer= customerRepository.findCustomerById(id);
-        if(customer == null){
+        Customer customer = customerRepository.findCustomerById(id);
+        if (customer == null) {
             throw new ApiException("Customer ID not found");
         }
         customerRepository.delete(customer);
@@ -63,19 +62,16 @@ public class CustomerService {
 
     ///////////////////////////////////////////////////////////////////////////
     //All assign
-    public void assignCustomerToMyUser(CustomerDTO cd, Integer auth){
+    public void assignCustomerToMyUser(CustomerDTO cd, Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
 
-        if(myUser == null){
+        if (myUser == null) {
             throw new ApiException("user ID not found");
-        }
-        if (myUser.getCustomer()!= null){
+        } else if (myUser.getCustomer() != null) {
             throw new ApiException("Customer Already Exist!!!!");
         }
-        if(!myUser.getRole().equalsIgnoreCase("Customer")){
-            throw new ApiException("your role not Customer");
-        }
-        Customer myCustomer = new Customer(null,cd.getFirstName(),cd.getLastName(),cd.getAge(),cd.getGender(),myUser,null,null,null);
+
+        Customer myCustomer = new Customer(null, cd.getFirstName(), cd.getLastName(), cd.getAge(), cd.getGender(), myUser, null, null, null);
         customerRepository.save(myCustomer);
     }
 }

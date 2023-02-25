@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -49,20 +50,20 @@ public class RatingController {
 
     //////////////////////////////////
     //Assign here
-    @PostMapping("/addRating/{branchId}")
-    public ResponseEntity addSRatingsToBranch(@RequestBody @Valid Rating rating, @PathVariable Integer branchId) {
-        ratingService.addSRatingsToBranch(rating,branchId);
+    @PostMapping("/addRating/{branchId}/{biilId}")
+    public ResponseEntity addSRatingsToBranch(@RequestBody @Valid Rating rating, @PathVariable Integer biilId, @PathVariable Integer branchId, @AuthenticationPrincipal MyUser myUser) {
+        ratingService.addSRatingsToBranch(rating,branchId,biilId,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
-    @PostMapping("/addRatingsToEmployee/{employeeId}")
-    public ResponseEntity addRatingsToEmployee(@RequestBody @Valid Rating rating, @PathVariable Integer employeeId) {
-        ratingService.addRatingsToEmployee(rating,employeeId);
+    @PostMapping("/addRatingsToEmployee/employye_id{employeeId}/bill_id/{billId}")
+    public ResponseEntity addRatingsToEmployee(@RequestBody @Valid Rating rating, @PathVariable Integer employeeId,@PathVariable Integer billId, @AuthenticationPrincipal MyUser myUser) {
+        ratingService.addRatingsToEmployee(rating,employeeId,billId,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 
-    @PostMapping("/addRatingsToBill")
-    public ResponseEntity addRatingsToBill(@RequestBody @Valid RatingDTO rd) {
-        ratingService.addRatingsToBill(rd);
+    @PostMapping("/addRatingsToBill/{billId}")
+    public ResponseEntity addRatingsToBill(@RequestBody @Valid RatingDTO rd,@AuthenticationPrincipal MyUser myUser,@PathVariable Integer billId) {
+        ratingService.addRatingsToBill(rd,myUser.getId(),billId);
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 }

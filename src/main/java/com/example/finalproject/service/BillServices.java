@@ -1,5 +1,6 @@
 package com.example.finalproject.service;
 
+
 import com.example.finalproject.apiException.ApiException;
 import com.example.finalproject.model.*;
 import com.example.finalproject.repository.*;
@@ -16,32 +17,71 @@ public class BillServices {
     private final BillRepository billRepository;
     private final ServicesProductRepository servicesProductRepository;
     private final CustomerRepository customerRepository;
-    private  final MerchantRepository merchantRepository;
+    private final MerchantRepository merchantRepository;
     private final PointRepository pointRepository;
+    private final MyUserRepository myUserRepository;
+
+    private final EmployeeRepository employeeRepository;
 
 
     //////////////////////////////////////////////////
     //crud here
-    public List<Bill> getAll(){
+    public List<Bill> getAll() {
         return billRepository.findAll();
     }
 
-    public Bill getById(Integer id){
-        Bill bill = billRepository.findBillById(id);
+    public List<Bill> getMyBillsCustomer(Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+        List<Bill> bill = billRepository.findAllBillByCustomerId(myUser.getCustomer().getId());
         if (bill == null) {
             throw new ApiException("bill not found");
         }
         return bill;
     }
 
-    public void add(Bill bill){
+    public Bill getBillByIdForCustomer(Integer auth, Integer billId) {
+        Bill bill = billRepository.findBillById(billId);
+        if (bill == null) {
+            throw new ApiException("bill not Found");
+        }
+        if (bill.getCustomer().getId() != auth) {
+            throw new ApiException("Sorry , You do not have the authority to get this Bill!");
+        }
+        return bill;
+
+    }
+
+    //////////////////////////////////////////////////////////
+    public List<Bill> getMyBillsMerchant(Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+
+        List<Bill> bill = billRepository.findAllBillByMerchantId(myUser.getMerchant().getId());
+        if (bill == null) {
+            throw new ApiException("bill not found");
+        }
+        return bill;
+    }
+
+    public Bill getBillByIdForMerchant(Integer auth, Integer billId) {
+        Bill bill = billRepository.findBillById(billId);
+        if (bill == null) {
+            throw new ApiException("bill not Found");
+        }
+        if (bill.getMerchant().getId() != auth) {
+            throw new ApiException("Sorry , You do not have the authority to get this Bill!");
+        }
+        return bill;
+
+    }
+
+    public void add(Bill bill) {
         bill.setCreatedDate(LocalDate.now());
         billRepository.save(bill);
     }
 
-    public void update(Bill newBill,Integer id) {
-        Bill bill= billRepository.findBillById(id);
-        if(bill == null){
+    public void update(Bill newBill, Integer id) {
+        Bill bill = billRepository.findBillById(id);
+        if (bill == null) {
             throw new ApiException("bill ID not found");
         }
         bill.setTotalPrice(newBill.getTotalPrice());
@@ -51,8 +91,8 @@ public class BillServices {
     }
 
     public void delete(Integer id) {
-        Bill bill= billRepository.findBillById(id);
-        if(bill == null){
+        Bill bill = billRepository.findBillById(id);
+        if (bill == null) {
             throw new ApiException("Feature ID not found");
         }
         billRepository.delete(bill);
@@ -60,65 +100,88 @@ public class BillServices {
     ///////////////////////////////////////////////////
     // assign here
 
-    public void addServicesToBill(Integer serviceId,Integer billId){
+    //Merchant
+    public void addServicesToBill(Integer serviceId, Integer billId) {
         Bill bill = billRepository.findBillById(billId);
         ServicesProduct sp = servicesProductRepository.findServicesProductById(serviceId);
-        if (bill == null ) {
+        if (bill == null) {
             throw new ApiException("Bill ID not found");
-        } else if (sp == null ) {
+        } else if (sp == null) {
             throw new ApiException("Services Product ID not found");
         }
-        for(ServicesProduct ss: bill.getServicesProducts()){
-            if(ss.getId() == serviceId){
+        for (ServicesProduct ss : bill.getServicesProducts()) {
+            if (ss.getId() == serviceId) {
                 throw new ApiException("Services Product already added");
             }
         }
         double totalPrice = bill.getTotalPrice();
         double totalPoints = bill.getTotalPoints();
         bill.setCreatedDate(LocalDate.now());
-        bill.setTotalPrice(sp.getPrice()+totalPrice);
-        bill.setTotalPoints(sp.getPoint()+totalPoints);
+        bill.setTotalPrice(sp.getPrice() + totalPrice);
+        bill.setTotalPoints(sp.getPoint() + totalPoints);
         sp.setBill(bill);
         servicesProductRepository.save(sp);
         billRepository.save(bill);
     }
 
-    public void removeServicesFromBill(Integer serviceId,Integer billId){
+    public void addEmployToBill(Integer employeeId, Integer billId, Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+        Bill bill = billRepository.findBillById(billId);
+        Employee employee = employeeRepository.findEmployeeById(employeeId);
+
+        if (bill == null) {
+            throw new ApiException("Bill ID not found");
+        }else if(employee.getBranch().getMerchant().getMyUser().getId() != auth){
+            throw new ApiException("not auth");
+        }else if(!myUser.getMerchant().getBill().contains(bill)){
+            throw new ApiException("not your bill");
+        }
+
+        bill.setEmployee(employee);
+        billRepository.save(bill);
+
+    }
+
+
+    //Merchant
+    public void removeServicesFromBill(Integer serviceId, Integer billId) {
         Bill bill = billRepository.findBillById(billId);
         ServicesProduct sp = servicesProductRepository.findServicesProductById(serviceId);
-        if (bill == null ) {
+        if (bill == null) {
             throw new ApiException("Bill ID not found");
-        } else if (sp == null ) {
+        } else if (sp == null) {
             throw new ApiException("Services Product ID not found");
-        }else if (bill.getServicesProducts().isEmpty()){
+        } else if (bill.getServicesProducts().isEmpty()) {
             throw new ApiException("there is no Services Product to delete it");
         }
         double totalPrice = bill.getTotalPrice();
         double totalPoints = bill.getTotalPoints();
-        bill.setTotalPrice(totalPrice-sp.getPrice());
-        bill.setTotalPoints(totalPoints-sp.getPoint());
+        bill.setTotalPrice(totalPrice - sp.getPrice());
+        bill.setTotalPoints(totalPoints - sp.getPoint());
         sp.setBill(null);
         billRepository.save(bill);
         servicesProductRepository.save(sp);
 
     }
 
-    public void addBillToCustomerAndMerchant(Integer customerId, Integer merchantId,Integer billId){
-        Bill bill = billRepository.findBillById(billId);
+    //Merchant
+    public void addBillToCustomerAndMerchant(Integer customerId, Integer billId, Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+        Merchant merchant = merchantRepository.findMerchantById(myUser.getMerchant().getId());
         Customer customer = customerRepository.findCustomerById(customerId);
-        Merchant merchant = merchantRepository.findMerchantById(merchantId);
-        Point point = pointRepository.findPointByCustomerIdAndMerchantId(customerId, merchantId);
-        if (point == null) {
-            throw new ApiException("can't add points");
-        }
-        if(bill == null){
-            throw new ApiException("Bill ID not found");
-        } else if (customer == null ) {
-            throw new ApiException("Customer ID not found");
-        }else if (merchant == null) {
-            throw new ApiException("Merchant ID not found");
+        Bill bill = billRepository.findBillById(billId);
+        Point point = pointRepository.findPointByCustomerIdAndMerchantId(customerId, merchant.getId());
 
+        if (point == null) {
+            throw new ApiException("can't add points, please create loyalty point to Customer");
+        } else if (bill == null) {
+            throw new ApiException("Bill ID not found");
+        } else if (customer == null) {
+            throw new ApiException("Customer ID not found");
+        } else if (merchant == null) {
+            throw new ApiException("Merchant ID not found");
         }
+
         point.setPoints(bill.getTotalPoints());
         bill.setMerchant(merchant);
         bill.setCustomer(customer);

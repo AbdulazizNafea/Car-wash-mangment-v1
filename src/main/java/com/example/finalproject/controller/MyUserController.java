@@ -1,13 +1,13 @@
 package com.example.finalproject.controller;
 
 
-import com.example.finalproject.DTO.MyUserDTO;
 import com.example.finalproject.model.MyUser;
 import com.example.finalproject.service.MyUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,9 +23,9 @@ public class MyUserController {
         return ResponseEntity.status(HttpStatus.OK).body(myUserService.getAll());
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity getById(@PathVariable Integer id) {
-        return ResponseEntity.status(HttpStatus.OK).body(myUserService.getById(id));
+    @GetMapping("/getMyUser")
+    public ResponseEntity getById(@AuthenticationPrincipal MyUser myUser) {
+        return ResponseEntity.status(HttpStatus.OK).body(myUserService.getMyUser(myUser.getId()));
     }
 
 //    @PostMapping("/add")

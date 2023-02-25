@@ -3,13 +3,16 @@ package com.example.finalproject.service;
 import com.example.finalproject.apiException.ApiException;
 import com.example.finalproject.model.Customer;
 import com.example.finalproject.model.Merchant;
+import com.example.finalproject.model.MyUser;
 import com.example.finalproject.model.Point;
 import com.example.finalproject.repository.CustomerRepository;
 import com.example.finalproject.repository.MerchantRepository;
+import com.example.finalproject.repository.MyUserRepository;
 import com.example.finalproject.repository.PointRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,15 +22,16 @@ public class PointService {
     private final PointRepository pointRepository;
     private final CustomerRepository customRepository;
     private final MerchantRepository merchantRepository;
+    private final MyUserRepository myUserRepository;
 
 
     //////////////////////////////////////////////////
     //crud here
-    public List<Point> getAll(){
+    public List<Point> getAll() {
         return pointRepository.findAll();
     }
 
-    public Point getById(Integer id){
+    public Point getById(Integer id) {
         Point point = pointRepository.findPointById(id);
         if (point == null) {
             throw new ApiException("point not found");
@@ -35,22 +39,37 @@ public class PointService {
         return point;
     }
 
-    public void add(Point point){
+    // just this important
+    public List<Point> getMyPoint(Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+        List<Point> points = new ArrayList<>();
+        if (myUser.getRole().equalsIgnoreCase("Merchant")) {
+            points = pointRepository.findAllPointByMerchantId(myUser.getMerchant().getId());
+        } else if (myUser.getRole().equalsIgnoreCase("Customer")) {
+            points = pointRepository.findAllPointByMerchantId(myUser.getCustomer().getId());
+        }
+        if (points.isEmpty()) {
+            throw new ApiException("no points");
+        }
+        return points;
+    }
+
+    public void add(Point point) {
         pointRepository.save(point);
     }
 
-    public void update(Point newPoint,Integer id) {
-        Point point= pointRepository.findPointById(id);
-        if(point == null){
+    public void update(Point newPoint, Integer id) {
+        Point point = pointRepository.findPointById(id);
+        if (point == null) {
             throw new ApiException("Point ID not found");
         }
-       point.setPoints(newPoint.getPoints());
+        point.setPoints(newPoint.getPoints());
         pointRepository.save(point);
     }
 
     public void delete(Integer id) {
-        Point point= pointRepository.findPointById(id);
-        if(point == null){
+        Point point = pointRepository.findPointById(id);
+        if (point == null) {
             throw new ApiException("Point ID not found");
         }
         pointRepository.delete(point);
@@ -58,30 +77,25 @@ public class PointService {
     ///////////////////////////////////////////////////
     // assign here
 
-    public void assignPointToCustomerAndMerchant(Point newPoint, Integer customerId,Integer merchantId){
+    public void assignPointToCustomerAndMerchant(Point newPoint, Integer customerId, Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+        Merchant merchant = merchantRepository.findMerchantById(myUser.getMerchant().getId());
         Customer customer = customRepository.findCustomerById(customerId);
-        Merchant merchant = merchantRepository.findMerchantById(merchantId);
-        Point point = pointRepository.findPointByCustomerIdAndMerchantId(customerId, merchantId);
-        if(point != null){
+        Point point = pointRepository.findPointByCustomerIdAndMerchantId(customerId, myUser.getMerchant().getId());
+
+
+        if (point != null) {
             throw new ApiException("Already added");
-        }
-
-        if(merchant == null){
+        } else if (merchant == null) {
             throw new ApiException("Merchant not found");
-        }
-
-        if(customer == null){
+        } else if (customer == null) {
             throw new ApiException("Customer not found");
         }
-//        if(newPoint.getCustomer().getId() == customerId && newPoint.getMerchant().getId() == merchantId){
-//            throw new ApiException("U cant add customer to same merchant");
-//        }
+
         newPoint.setCustomer(customer);
         newPoint.setMerchant(merchant);
         newPoint.setPoints(0);
         pointRepository.save(newPoint);
 
     }
-
-
 }
