@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class BillController {
 
     private final BillServices billServices;
-
-    //////////////////Test Admin\\\\\\\\\\\\\\\\\
+    //////////////////Test Admin\\\\\\\\\\\\
     @GetMapping("/getAll")
     public ResponseEntity getAll() {
         return ResponseEntity.status(HttpStatus.OK).body(billServices.getAll());

@@ -50,18 +50,18 @@ public class RatingController {
 
     //////////////////////////////////
     //Assign here
-    @PostMapping("/addRating/{branchId}/{biilId}")
+    @PostMapping("/customer/addRating/{branchId}/{biilId}")
     public ResponseEntity addSRatingsToBranch(@RequestBody @Valid Rating rating, @PathVariable Integer biilId, @PathVariable Integer branchId, @AuthenticationPrincipal MyUser myUser) {
         ratingService.addSRatingsToBranch(rating,branchId,biilId,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
-    @PostMapping("/addRatingsToEmployee/employye_id{employeeId}/bill_id/{billId}")
+    @PostMapping("/customer/addRatingsToEmployee/employye_id{employeeId}/bill_id/{billId}")
     public ResponseEntity addRatingsToEmployee(@RequestBody @Valid Rating rating, @PathVariable Integer employeeId,@PathVariable Integer billId, @AuthenticationPrincipal MyUser myUser) {
         ratingService.addRatingsToEmployee(rating,employeeId,billId,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 
-    @PostMapping("/addRatingsToBill/{billId}")
+    @PostMapping("/customer/addRatingsToBill/{billId}")
     public ResponseEntity addRatingsToBill(@RequestBody @Valid RatingDTO rd,@AuthenticationPrincipal MyUser myUser,@PathVariable Integer billId) {
         ratingService.addRatingsToBill(rd,myUser.getId(),billId);
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
