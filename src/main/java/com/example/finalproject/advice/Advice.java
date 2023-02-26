@@ -3,6 +3,7 @@ package com.example.finalproject.advice;
 import com.example.finalproject.apiException.ApiException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.format.DateTimeParseException;
 
 @ControllerAdvice
 public class Advice {
@@ -100,6 +102,25 @@ public class Advice {
     //JpaObjectRetrievalFailureException
     @ExceptionHandler(value = JpaObjectRetrievalFailureException.class)
     public ResponseEntity<ApiException> JpaObjectRetrievalFailureException(JpaObjectRetrievalFailureException e) {
+        String msg =  e.getMessage();
+        return ResponseEntity.status(400).body(new ApiException(msg));
+    }
+
+    //InvalidDataAccessApiUsageException
+    @ExceptionHandler(value = InvalidDataAccessApiUsageException.class)
+    public ResponseEntity<ApiException> InvalidDataAccessApiUsageException(InvalidDataAccessApiUsageException e) {
+        String msg =  e.getMessage();
+        return ResponseEntity.status(400).body(new ApiException(msg));
+    }
+    ////DateTimeParseException
+    @ExceptionHandler(value = DateTimeParseException.class)
+    public ResponseEntity<ApiException> DateTimeParseException(DateTimeParseException e) {
+        String msg =  e.getMessage();
+        return ResponseEntity.status(400).body(new ApiException(msg));
+    }
+    //IllegalArgumentException
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public ResponseEntity<ApiException> IllegalArgumentException(IllegalArgumentException e) {
         String msg =  e.getMessage();
         return ResponseEntity.status(400).body(new ApiException(msg));
     }

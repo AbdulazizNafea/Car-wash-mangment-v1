@@ -70,7 +70,7 @@ public class CustomerService {
         } else if (myUser.getCustomer() != null) {
             throw new ApiException("Customer Already Exist!!!!");
         }
-        myUser.setRole("CUSTOMER");
+//        myUser.setRole("Customer");
         myUserRepository.save(myUser);
         Customer myCustomer = new Customer(null, cd.getFirstName(), cd.getLastName(), cd.getAge(), cd.getGender(), myUser, null, null, null);
         customerRepository.save(myCustomer);

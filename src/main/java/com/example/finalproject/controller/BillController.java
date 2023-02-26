@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping("/api/v1/bill")
 @RequiredArgsConstructor
@@ -88,5 +91,11 @@ public class BillController {
     public ResponseEntity addEmployToBill(@AuthenticationPrincipal MyUser myUser, @PathVariable Integer billId, @PathVariable Integer employeeId) {
         billServices.addEmployToBill(employeeId, billId, myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
+    }
+
+    @GetMapping("/start/{start}/end/{end}")
+    public ResponseEntity time(@PathVariable String start, @PathVariable String end) throws ParseException {
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(billServices.getBillByCreatedDateBetween(start, end));
     }
 }

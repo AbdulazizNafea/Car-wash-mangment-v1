@@ -7,6 +7,8 @@ import com.example.finalproject.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -199,5 +201,15 @@ public class BillServices {
         bill.setCustomer(customer);
         billRepository.save(bill);
         pointRepository.save(point);
+    }
+
+    //
+
+    public List<Bill> getBillByCreatedDateBetween(String start, String end) throws ParseException {
+        //format string to date
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+
+        List<Bill> bills = billRepository.findAllByCreatedDateBetween(LocalDate.parse(start), LocalDate.parse(end));
+        return bills;
     }
 }
