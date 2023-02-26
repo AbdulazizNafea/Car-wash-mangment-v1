@@ -33,10 +33,8 @@ public class MyUserService {
         }
         return myUser;
     }
-
     //register user
     public void register(MyUser user) {
-//        user.setRole("USER");
         if (user.getPassword().isBlank() || user.getPassword().isEmpty()) {
             throw new ApiException("Password should be not empty and more than 3");
         }

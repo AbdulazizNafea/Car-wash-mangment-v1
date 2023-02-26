@@ -57,16 +57,17 @@ public class MerchantService {
     public void assignMyUserToMerchant2(MerchantDTO md, Integer auth) {
 
         MyUser myUser = myUserRepository.findMyUserById(auth);
-        if (!myUser.getRole().equalsIgnoreCase("Merchant")) {
-            throw new ApiException("This Page Only For Merchants!!!!");
-        } else if (myUser.getMerchant() != null) {
+//        if (!myUser.getRole().equalsIgnoreCase("Merchant")) {
+//            throw new ApiException("This Page Only For Merchants!!!!");
+//        }
+         if (myUser.getMerchant() != null) {
             throw new ApiException("Merchants Already Existing !");
         } else if (myUser == null) {
             throw new ApiException("user ID not found");
         }
-        myUser.setRole("MERCHANT");
-        myUserRepository.save(myUser);
+
         Merchant myMerchant = new Merchant(null, md.getCompany_name(), md.getCommercial_record(), myUser, null, null, null);
         merchantRepository.save(myMerchant);
+        myUserRepository.save(myUser);
     }
 }

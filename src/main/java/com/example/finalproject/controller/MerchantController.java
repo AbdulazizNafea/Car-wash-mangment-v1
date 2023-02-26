@@ -51,7 +51,7 @@ public class MerchantController {
     }
     //////////////////////////////////////
     //assign here
-    @PostMapping("/merchant/assignU")
+    @PostMapping("/assignU")
     public ResponseEntity assignU(@RequestBody @Valid MerchantDTO md,@AuthenticationPrincipal MyUser myUser) {
         merchantService.assignMyUserToMerchant2(md,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");

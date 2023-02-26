@@ -7,6 +7,8 @@ import com.example.finalproject.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -131,9 +133,9 @@ public class BillServices {
 
         if (bill == null) {
             throw new ApiException("Bill ID not found");
-        }else if(employee.getBranch().getMerchant().getMyUser().getId() != auth){
+        } else if (employee.getBranch().getMerchant().getMyUser().getId() != auth) {
             throw new ApiException("not auth");
-        }else if(!myUser.getMerchant().getBill().contains(bill)){
+        } else if (!myUser.getMerchant().getBill().contains(bill)) {
             throw new ApiException("not your bill");
         }
 
@@ -181,11 +183,33 @@ public class BillServices {
         } else if (merchant == null) {
             throw new ApiException("Merchant ID not found");
         }
-
-        point.setPoints(bill.getTotalPoints());
+        // Buy by Points
+        int totalPointPrice = 0;
+        if (bill.getPaymentMethod().equalsIgnoreCase("point")) {
+            for (ServicesProduct sp : bill.getServicesProducts()) {
+                totalPointPrice = sp.getTotalPoints() + totalPointPrice;
+            }
+            if (point.getPoints() >= totalPointPrice) {
+                point.setPoints(point.getPoints() - totalPointPrice);
+            }else {
+                throw new ApiException("Customer point balance not enough to buy this bill");
+            }
+        }else {
+            point.setPoints(bill.getTotalPoints());
+        }
         bill.setMerchant(merchant);
         bill.setCustomer(customer);
         billRepository.save(bill);
         pointRepository.save(point);
+    }
+
+    //
+
+    public List<Bill> getBillByCreatedDateBetween(String start, String end) throws ParseException {
+        //format string to date
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+
+        List<Bill> bills = billRepository.findAllByCreatedDateBetween(LocalDate.parse(start), LocalDate.parse(end));
+        return bills;
     }
 }

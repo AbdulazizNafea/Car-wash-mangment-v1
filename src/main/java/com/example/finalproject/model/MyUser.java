@@ -39,6 +39,7 @@ public class MyUser implements UserDetails {
     @NotEmpty(message = "Phone Number must not be empty")
     @Size(min = 10, max = 10, message = "min 10 and max 10 phone number")
     private String phone;
+    @Temporal(TemporalType.DATE)
     private LocalDate createdAt;
 
     @NotEmpty(message = "Role must not be empty")
