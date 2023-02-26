@@ -2,6 +2,9 @@ package com.example.finalproject.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,13 +20,14 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    @NotEmpty(message = "First name must not be empty")
     private String firstName;
-
+    @NotEmpty(message = "Last name must not be empty")
     private String lastName;
-
+    @NotNull(message = "Age must not be null")
     private Integer age;
-
+    @NotEmpty(message = "Gender must not be empty")
+    @Pattern(regexp = "(?:^|\\W)male(?:$|\\W)|(?:^|\\W)female(?:$|\\W)", message = "Gender must be ether Male or Female ")
     private String gender;
 
     /////////////////////Relations\\\\\\\\\\\\\\\\\\\\\\
