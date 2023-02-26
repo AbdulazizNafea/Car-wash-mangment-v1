@@ -2,6 +2,7 @@ package com.example.finalproject.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,8 +19,9 @@ public class Merchant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    @NotEmpty(message = "Company name must not be empty")
     private String company_name;
+    @NotEmpty(message = "Commercial record must not be empty")
     private String commercial_record;
 
 
