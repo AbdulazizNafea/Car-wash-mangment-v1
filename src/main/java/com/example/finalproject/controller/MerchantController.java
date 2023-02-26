@@ -38,20 +38,20 @@ public class MerchantController {
 //        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
 //    }
 
-    @PutMapping("/update")
+    @PutMapping("/merchant/update")
     public ResponseEntity update(@RequestBody @Valid Merchant merchant, @AuthenticationPrincipal MyUser myUser) {
         merchantService.update(merchant, myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("UPDATED");
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/merchant/delete/{id}")
     public ResponseEntity delete(@PathVariable Integer id) {
         merchantService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("DELETED");
     }
     //////////////////////////////////////
     //assign here
-    @PostMapping("/assignU")
+    @PostMapping("/merchant/assignU")
     public ResponseEntity assignU(@RequestBody @Valid MerchantDTO md,@AuthenticationPrincipal MyUser myUser) {
         merchantService.assignMyUserToMerchant2(md,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");

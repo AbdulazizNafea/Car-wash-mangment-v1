@@ -1,8 +1,6 @@
 package com.example.finalproject.controller;
 
-import com.example.finalproject.model.Branch;
 import com.example.finalproject.model.Car;
-import com.example.finalproject.model.Employee;
 import com.example.finalproject.model.MyUser;
 import com.example.finalproject.service.CarService;
 import jakarta.validation.Valid;

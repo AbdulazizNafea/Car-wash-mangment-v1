@@ -30,6 +30,8 @@ public class MyUser implements UserDetails {
     private String email;
     private String phone;
     private LocalDate createdAt;
+
+    //MERCHANT or CUSTOMER
     private String role;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "myUser")

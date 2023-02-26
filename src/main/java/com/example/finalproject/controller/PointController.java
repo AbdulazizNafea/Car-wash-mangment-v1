@@ -1,6 +1,5 @@
 package com.example.finalproject.controller;
 
-import com.example.finalproject.DTO.RatingDTO;
 import com.example.finalproject.model.MyUser;
 import com.example.finalproject.model.Point;
 import com.example.finalproject.service.PointService;
@@ -53,7 +52,7 @@ public class PointController {
 
     ///////////////////////////
     //ASSIGN HERE
-    @PostMapping("/assignPointToCustomerAndMerchant/Customer/{customerId}")
+    @PostMapping("/merchant/assignPointToCustomerAndMerchant/Customer/{customerId}")
     public ResponseEntity assignPointToCustomerAndMerchant(@RequestBody Point point,@PathVariable Integer customerId,@AuthenticationPrincipal MyUser myUser) {
         pointService.assignPointToCustomerAndMerchant(point,customerId,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");

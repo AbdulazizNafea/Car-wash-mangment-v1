@@ -59,18 +59,14 @@ public class MerchantService {
         MyUser myUser = myUserRepository.findMyUserById(auth);
         if (!myUser.getRole().equalsIgnoreCase("Merchant")) {
             throw new ApiException("This Page Only For Merchants!!!!");
-        }
-        if (myUser.getMerchant() != null) {
-            throw new ApiException("Merchants werk!!!!");
-        }
-        if (myUser == null) {
+        } else if (myUser.getMerchant() != null) {
+            throw new ApiException("Merchants Already Existing !");
+        } else if (myUser == null) {
             throw new ApiException("user ID not found");
         }
-        if (!myUser.getRole().equalsIgnoreCase("Merchant")) {
-            throw new ApiException("your role not merchant");
-        }
+        myUser.setRole("MERCHANT");
+        myUserRepository.save(myUser);
         Merchant myMerchant = new Merchant(null, md.getCompany_name(), md.getCommercial_record(), myUser, null, null, null);
         merchantRepository.save(myMerchant);
     }
-
 }
