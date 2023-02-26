@@ -2,6 +2,8 @@ package com.example.finalproject.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,11 +19,11 @@ public class Bill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    @NotNull(message = "TotalPrice must not be empty")
     private double totalPrice;
-
+    @NotEmpty(message = "PaymentMethod must not be empty")
     private String paymentMethod;
-
+    @NotNull(message = "TotalPoints must not be empty")
     private double totalPoints;
 
     private LocalDate createdDate;

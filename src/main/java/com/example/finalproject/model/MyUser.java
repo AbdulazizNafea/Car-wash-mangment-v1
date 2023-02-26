@@ -3,6 +3,10 @@ package com.example.finalproject.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,11 +29,19 @@ public class MyUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(unique = true)
     private String username;
+    @NotEmpty(message = "Password must not be empty")
     private String password;
+    @NotEmpty(message = "Email must not be empty")
+    @Email(message = "Please Write correct email")
     private String email;
+    @NotEmpty(message = "Phone Number must not be empty")
+    @Size(min = 10, max = 10, message = "min 10 and max 10 phone number")
     private String phone;
     private LocalDate createdAt;
+    @NotEmpty(message = "Role must not be empty")
+    @Pattern(regexp = "(?:^|\\W)customer(?:$|\\W)|(?:^|\\W)admin(?:$|\\W)|(?:^|\\W)merchant(?:$|\\W)", message = "Role must be customer or merchant or admin ")
     private String role;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "myUser")
