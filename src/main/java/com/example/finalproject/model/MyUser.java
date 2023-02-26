@@ -40,8 +40,13 @@ public class MyUser implements UserDetails {
     @Size(min = 10, max = 10, message = "min 10 and max 10 phone number")
     private String phone;
     private LocalDate createdAt;
+
     @NotEmpty(message = "Role must not be empty")
     @Pattern(regexp = "(?:^|\\W)customer(?:$|\\W)|(?:^|\\W)admin(?:$|\\W)|(?:^|\\W)merchant(?:$|\\W)", message = "Role must be customer or merchant or admin ")
+
+
+
+
     private String role;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "myUser")

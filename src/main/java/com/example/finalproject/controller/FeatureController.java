@@ -28,11 +28,8 @@ public class FeatureController {
         return ResponseEntity.status(HttpStatus.OK).body(featureService.getFeatureByBranchId(id));
     }
 
-//    @PostMapping("/add")
-//    public ResponseEntity add(@RequestBody @Valid Feature feature) {
-//        featureService.add(feature);
-//        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
-//    }
+
+    ///////////////////merchant Role\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
     @PutMapping("/merchant/update/{id}")
     public ResponseEntity update(@RequestBody @Valid Feature feature, @PathVariable Integer id, @AuthenticationPrincipal MyUser myUser) {
@@ -48,7 +45,7 @@ public class FeatureController {
     //////////////////////////////////
     //Assign here
     @PostMapping("/merchant/addFeature/{branchId}")
-    public ResponseEntity addCustomer(@RequestBody @Valid Feature feature, @PathVariable Integer branchId, @AuthenticationPrincipal MyUser myUser) {
+    public ResponseEntity addFeature(@RequestBody @Valid Feature feature, @PathVariable Integer branchId, @AuthenticationPrincipal MyUser myUser) {
         featureService.assignFeatureToBranch(feature,branchId,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }

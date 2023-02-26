@@ -21,35 +21,38 @@ public class BranchController {
         return ResponseEntity.status(HttpStatus.OK).body(branchService.getAll());
     }
 
-    @GetMapping("/getMyBranches")
-    public ResponseEntity getById(@AuthenticationPrincipal MyUser myUser) {
-        return ResponseEntity.status(HttpStatus.OK).body(branchService.getMyBranches(myUser.getId()));
-    }
     @GetMapping("/get/{id}")
     public ResponseEntity getById(@PathVariable Integer id,@AuthenticationPrincipal MyUser myUser) {
         return ResponseEntity.status(HttpStatus.OK).body(branchService.getById(id, myUser.getId()));
     }
 
-    @PostMapping("/add")
+    /////////////Merchant role\\\\\\\\\\\\\\
+    @GetMapping("/merchant/getMyBranches")
+    public ResponseEntity getById(@AuthenticationPrincipal MyUser myUser) {
+        return ResponseEntity.status(HttpStatus.OK).body(branchService.getMyBranches(myUser.getId()));
+    }
+
+
+    @PostMapping("/merchant/add")
     public ResponseEntity add(@RequestBody @Valid Branch branch,@AuthenticationPrincipal MyUser myUser) {
         branchService.add(branch,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/merchant/update/{id}")
     public ResponseEntity update(@RequestBody @Valid Branch branch, @PathVariable Integer id,@AuthenticationPrincipal MyUser myUser) {
         branchService.update(branch, id,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("UPDATED");
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/merchant/delete/{id}")
     public ResponseEntity delete(@PathVariable Integer id, @AuthenticationPrincipal MyUser myUser) {
         branchService.delete(id,myUser.getId());
         return ResponseEntity.status(HttpStatus.OK).body("DELETED");
     }
     /////////////////////////////////////////////////////
     //Assign here
-    @PostMapping("/assignBranch")
+    @PostMapping("/merchant/assignBranch")
     public ResponseEntity assignBranch(@RequestBody @Valid Branch branch, @AuthenticationPrincipal MyUser myUser) {
         branchService.addBranchToMerchant(branch,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");

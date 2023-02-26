@@ -28,12 +28,6 @@ public class MyUserController {
         return ResponseEntity.status(HttpStatus.OK).body(myUserService.getMyUser(myUser.getId()));
     }
 
-//    @PostMapping("/add")
-//    public ResponseEntity add(@RequestBody @Valid MyUser myUser) {
-//        myUserService.add(myUser);
-//        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
-//    }
-
     @PutMapping("/update/{id}")
     public ResponseEntity update(@RequestBody @Valid MyUser myUser, @PathVariable Integer id) {
         myUserService.update(myUser, id);
