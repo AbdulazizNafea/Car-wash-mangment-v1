@@ -25,4 +25,6 @@ public class Feature {
     @JsonIgnore
     private Branch branch;
 
+    public Feature(Object o, String coffee, String a_place_for_coffee) {
+    }
 }
