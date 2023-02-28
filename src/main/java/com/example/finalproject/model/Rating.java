@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @Entity
 @AllArgsConstructor
@@ -24,6 +26,8 @@ public class Rating {
     private double rate;
     @NotEmpty(message = "Comment must not be empty")
     private String comment;
+    @Temporal(TemporalType.DATE)
+    private LocalDate createdAt;
 
     @ManyToOne
     @JoinColumn(name = "branch_id", referencedColumnName ="id")

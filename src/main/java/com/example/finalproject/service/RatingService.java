@@ -7,6 +7,8 @@ import com.example.finalproject.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -102,8 +104,46 @@ public class RatingService {
         } else if (!customer.getBill().contains(bill)) {
             throw new ApiException("cant add rate to bill tou dont own");
         }
-        Rating rating = new Rating(null, rd.getRate(), rd.getComment(), null, null, bill);
+        Rating rating = new Rating(null, rd.getRate(), rd.getComment(), rd.getCreatedAt(), null, null,bill);
         ratingRepository.save(rating);
     }
+
+//    //////find all emp rating by time interval
+//    public List<Employee> getAllEmpRatingInTineRange(String start, String end, Integer auth){
+//        MyUser myUser = myUserRepository.findMyUserById(auth);
+////        List<Employee> employee = employeeRepository.findAllById(myUser.getMerchant().getBranch().get());
+//        List<Employee> employee = new ArrayList<>();
+//        int i = 0;
+//        for (Branch branch: myUser.getMerchant().getBranch()) {
+//            if(branch.getMerchant().getId()== myUser.getMerchant().getId()) {
+//                employee.add(branch.getEmployees().get(i));
+//            }
+//            i++;
+//        }
+//        if(empId == null ){
+//            throw new ApiException("Id Not Found");
+//        } else if (employee.getBranch().getMerchant().getMyUser().getId() != auth) {
+//            throw new ApiException("Your Not Authorized");
+//        }
+//        List<Employee> empRating = ratingRepository.findAllByIdAndEmployeeAndCreatedAtBetween(LocalDate.parse(start), LocalDate.parse(end));
+//         return empRating;
+//    }
+
+    //////find all rating avg for emp
+//    public List<Employee> getEmpRatingInTineRange(String start, String end, Integer auth, Integer empId){
+//        Employee employee = employeeRepository.findEmployeeById(empId);
+//        if(empId == null ){
+//            throw new ApiException("Id Not Found");
+//        } else if (employee.getBranch().getMerchant().getMyUser().getId() != auth) {
+//            throw new ApiException("Your Not Authorized");
+//        }
+//        List<Employee> empRating = ratingRepository.findAllByIdAndEmployeeAndCreatedAtBetween(LocalDate.parse(start), LocalDate.parse(end));
+//        return empRating;
+//    }
+
+//    public List<Rating> getEmpRatingInTineRange(String start, String end){
+//        List<Rating> empRating = ratingRepository.findAllByCreatedAtBetween(LocalDate.parse(start), LocalDate.parse(end));
+//        return empRating;
+//    }
 
 }

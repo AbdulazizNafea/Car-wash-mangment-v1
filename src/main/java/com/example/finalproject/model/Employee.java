@@ -36,4 +36,7 @@ public class Employee {
     // orphanRemoval=true
     // @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "bill" ,orphanRemoval=true)
     private List<Bill> bill;
+
+    public Employee(Object o, String ahmed, String s) {
+    }
 }

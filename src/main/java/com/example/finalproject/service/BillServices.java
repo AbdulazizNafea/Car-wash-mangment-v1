@@ -184,15 +184,15 @@ public class BillServices {
             throw new ApiException("Merchant ID not found");
         }
         // Buy by Points
-        int totalPointPrice = 0;
+        int totalPointToBuy = 0;
         if (bill.getPaymentMethod().equalsIgnoreCase("point")) {
             for (ServicesProduct sp : bill.getServicesProducts()) {
-                totalPointPrice = sp.getTotalPoints() + totalPointPrice;
+                totalPointToBuy = sp.getTotalPoints() + totalPointToBuy;
             }
-            if (point.getPoints() >= totalPointPrice) {
-                point.setPoints(point.getPoints() - totalPointPrice);
+            if (point.getPoints() >= totalPointToBuy) {
+                point.setPoints(point.getPoints() - totalPointToBuy);
             }else {
-                throw new ApiException("Customer point balance not enough to buy this bill");
+                throw new ApiException("Customer point balance not enough to buy this service, please pay by cash");
             }
         }else {
             point.setPoints(bill.getTotalPoints());
@@ -207,8 +207,6 @@ public class BillServices {
 
     public List<Bill> getBillByCreatedDateBetween(String start, String end) throws ParseException {
         //format string to date
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-
         List<Bill> bills = billRepository.findAllByCreatedDateBetween(LocalDate.parse(start), LocalDate.parse(end));
         return bills;
     }
