@@ -11,7 +11,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/v1/bill")
@@ -19,6 +18,7 @@ import java.time.LocalDate;
 public class BillController {
 
     private final BillServices billServices;
+
     //////////////////Test Admin\\\\\\\\\\\\
     @GetMapping("/getAll")
     public ResponseEntity getAll() {
@@ -69,9 +69,9 @@ public class BillController {
 
     //======================================
     //Assign here
-    @PostMapping("/merchant/addServicesToBill/{spId}/{billId}")
-    public ResponseEntity addServicesToBill(@PathVariable Integer billId, @PathVariable Integer spId) {
-        billServices.addServicesToBill(spId, billId);
+    @PostMapping("/merchant/addServicesToBill/product_id-{spId}/bill_id-{billId}/branch_id{branchId}")
+    public ResponseEntity addServicesToBill(@PathVariable Integer billId, @PathVariable Integer branchId, @PathVariable Integer spId, @AuthenticationPrincipal MyUser myUser) {
+        billServices.addServicesToBill(spId, billId, branchId, myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 
@@ -81,9 +81,9 @@ public class BillController {
         return ResponseEntity.status(HttpStatus.CREATED).body("removed");
     }
 
-    @PostMapping("/merchant/addBillToCustomer/{billId}/customer/{customerId}")
-    public ResponseEntity addBillToCustomer(@PathVariable Integer customerId, @PathVariable Integer billId, @AuthenticationPrincipal MyUser myUser) {
-        billServices.addBillToCustomerAndMerchant(customerId, billId, myUser.getId());
+    @PostMapping("/merchant/addBillToCustomer/bill_id-{billId}/customer_id-{customerId}/employee_id-{employeeId}")
+    public ResponseEntity addBillToCustomerAndMerchantAndEmployee(@PathVariable Integer customerId, @PathVariable Integer billId, @PathVariable Integer employeeId, @AuthenticationPrincipal MyUser myUser) {
+        billServices.addBillToCustomerAndMerchantAndEmployee(customerId, billId, employeeId, myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 
@@ -98,4 +98,26 @@ public class BillController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(billServices.getBillByCreatedDateBetween(start, end));
     }
+
+    @GetMapping("/merchant/getAllIncomeForMerchant")
+    public ResponseEntity getAllIncomeForMerchant(@AuthenticationPrincipal MyUser myUser) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(billServices.getAllIncomeForMerchant(myUser.getId()));
+    }
+
+    @GetMapping("/merchant/getAllIncomeInTimeRangeForMerchant/start_date_{start}/end_date_{end}")
+    public ResponseEntity getAllIncomeInTimeRangeForMerchant(@PathVariable String start, @PathVariable String end,@AuthenticationPrincipal MyUser myUser) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(billServices.getAllIncomeInTimeRangeForMerchant(start, end,myUser.getId()));
+    }
+
+    @GetMapping("/merchant/getAllDailyIncomeForMerchant")
+    public ResponseEntity getAllDailyIncomeForMerchant(@AuthenticationPrincipal MyUser myUser) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(billServices.getAllDailyIncomeForMerchant(myUser.getId()));
+    }
+
+    @GetMapping("/merchant/getAllDailyBillForMerchant")
+    public ResponseEntity getAllDailyBillForMerchant(@AuthenticationPrincipal MyUser myUser) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(billServices.getAllDailyBillForMerchant(myUser.getId()));
+    }
+
+
 }

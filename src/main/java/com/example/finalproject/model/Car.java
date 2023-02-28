@@ -25,8 +25,8 @@ public class Car {
     @NotEmpty(message = "Car type must not be empty")
     private String carType;
     @NotNull(message = "Model must not be empty")
-    @Min(value = 4, message = "Mode min 4")
-    @Max(value = 4, message = "Model Max 4")
+    @Min(value = 1950, message = "Mode min 1950")
+    @Max(value = 2030, message = "Model Max 2030")
     private Integer model;
 
     @ManyToOne

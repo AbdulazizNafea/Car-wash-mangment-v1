@@ -23,6 +23,9 @@ public class Employee {
     @NotEmpty(message = "Phone must not be empty")
     private String phone;
 
+    private double avgRate;
+
+
     @ManyToOne
     @JoinColumn(name = "branch_id", referencedColumnName ="id")
     @JsonIgnore

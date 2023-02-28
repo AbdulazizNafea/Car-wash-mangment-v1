@@ -25,7 +25,7 @@ public class MyUserController {
 
     @GetMapping("/getMyUser")
     public ResponseEntity getById(@AuthenticationPrincipal MyUser myUser) {
-        return ResponseEntity.status(HttpStatus.OK).body(myUserService.getMyUser(myUser.getId()));
+        return ResponseEntity.status(201).body(myUserService.getMyUser(myUser.getId()));
     }
 
     @PutMapping("/update/{id}")

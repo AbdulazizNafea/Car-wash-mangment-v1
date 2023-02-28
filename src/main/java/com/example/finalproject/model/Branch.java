@@ -29,6 +29,8 @@ public class Branch {
     private String phone;
     private LocalDate created;
 
+    private double avgRate;
+
     @ManyToOne
     @JoinColumn(name = "merchant_id", referencedColumnName = "id")
     @JsonIgnore

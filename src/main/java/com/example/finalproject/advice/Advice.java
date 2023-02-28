@@ -124,4 +124,19 @@ public class Advice {
         String msg =  e.getMessage();
         return ResponseEntity.status(400).body(new ApiException(msg));
     }
+
+    //IndexOutOfBoundsException
+    @ExceptionHandler(value = IndexOutOfBoundsException.class)
+    public ResponseEntity<ApiException> IndexOutOfBoundsException(IndexOutOfBoundsException e) {
+        String msg =  e.getMessage();
+        return ResponseEntity.status(400).body(new ApiException(msg));
+    }
+    //StackOverflowErrorExample
+    @ExceptionHandler(value = StackOverflowError.class)
+    public ResponseEntity<ApiException> StackOverflowError(StackOverflowError e) {
+        String msg =  e.getMessage();
+        return ResponseEntity.status(400).body(new ApiException(msg));
+    }
+
+
 }
