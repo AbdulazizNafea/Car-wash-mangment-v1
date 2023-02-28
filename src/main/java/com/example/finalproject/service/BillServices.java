@@ -5,12 +5,19 @@ import com.example.finalproject.apiException.ApiException;
 import com.example.finalproject.model.*;
 import com.example.finalproject.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.parser.Entity;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +29,7 @@ public class BillServices {
     private final MerchantRepository merchantRepository;
     private final PointRepository pointRepository;
     private final MyUserRepository myUserRepository;
-
+    private final BranchRepository branchRepository;
     private final EmployeeRepository employeeRepository;
 
 
@@ -103,14 +110,22 @@ public class BillServices {
     // assign here
 
     //Merchant
-    public void addServicesToBill(Integer serviceId, Integer billId) {
+    public void addServicesToBill(Integer serviceId, Integer billId, Integer branchId, Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+        Branch branch = branchRepository.findBranchById(branchId);
         Bill bill = billRepository.findBillById(billId);
         ServicesProduct sp = servicesProductRepository.findServicesProductById(serviceId);
+
         if (bill == null) {
             throw new ApiException("Bill ID not found");
         } else if (sp == null) {
             throw new ApiException("Services Product ID not found");
+        } else if (sp.getBranch().getMerchant().getMyUser().getId() != auth) {
+            throw new ApiException("Sorry , You do not have the Authority !");
+        } else if (!branch.getServicesProducts().contains(sp)) {
+            throw new ApiException("Sorry , Service not found in this Branch: " + branch.getName());
         }
+
         for (ServicesProduct ss : bill.getServicesProducts()) {
             if (ss.getId() == serviceId) {
                 throw new ApiException("Services Product already added");
@@ -167,12 +182,13 @@ public class BillServices {
     }
 
     //Merchant
-    public void addBillToCustomerAndMerchant(Integer customerId, Integer billId, Integer auth) {
+    public void addBillToCustomerAndMerchantAndEmployee(Integer customerId, Integer billId, Integer employeeId, Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
         Merchant merchant = merchantRepository.findMerchantById(myUser.getMerchant().getId());
         Customer customer = customerRepository.findCustomerById(customerId);
         Bill bill = billRepository.findBillById(billId);
         Point point = pointRepository.findPointByCustomerIdAndMerchantId(customerId, merchant.getId());
+        Employee employee = employeeRepository.findEmployeeById(employeeId);
 
         if (point == null) {
             throw new ApiException("can't add points, please create loyalty point to Customer");
@@ -182,6 +198,10 @@ public class BillServices {
             throw new ApiException("Customer ID not found");
         } else if (merchant == null) {
             throw new ApiException("Merchant ID not found");
+        } else if (employee == null) {
+            throw new ApiException("Employee ID not found");
+        } else if (employee.getBranch().getMerchant().getMyUser().getId() != auth) {
+            throw new ApiException("not auth");
         }
         // Buy by Points
         int totalPointPrice = 0;
@@ -191,14 +211,15 @@ public class BillServices {
             }
             if (point.getPoints() >= totalPointPrice) {
                 point.setPoints(point.getPoints() - totalPointPrice);
-            }else {
+            } else {
                 throw new ApiException("Customer point balance not enough to buy this bill");
             }
-        }else {
+        } else {
             point.setPoints(bill.getTotalPoints());
         }
         bill.setMerchant(merchant);
         bill.setCustomer(customer);
+        bill.setEmployee(employee);
         billRepository.save(bill);
         pointRepository.save(point);
     }
@@ -211,5 +232,107 @@ public class BillServices {
 
         List<Bill> bills = billRepository.findAllByCreatedDateBetween(LocalDate.parse(start), LocalDate.parse(end));
         return bills;
+    }
+
+
+    public String getAllIncomeForMerchant(Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+        Merchant merchant = merchantRepository.findMerchantById(myUser.getMerchant().getId());
+        if (merchant == null) {
+            throw new ApiException("Merchant not found");
+        }
+        double totalIncome = 0.0;
+        for (Bill bill : merchant.getBill()) {
+            totalIncome = totalIncome + bill.getTotalPrice();
+        }
+        return "#Bill count is: " + merchant.getBill().size() + "\t#Total Income is: " + totalIncome;
+    }
+
+    public String getAllIncomeInTimeRangeForMerchant(String start, String end, Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+        Merchant merchant = merchantRepository.findMerchantById(myUser.getMerchant().getId());
+        if (merchant == null) {
+            throw new ApiException("Merchant not found");
+        }
+        double totalIncome = 0.0;
+        int count = 0;
+        List<Bill> bills = billRepository.findAllByCreatedDateBetween(LocalDate.parse(start), LocalDate.parse(end));
+        for (Bill i : bills) {
+            if (i.getMerchant().getMyUser().getId() == auth) {
+                totalIncome = totalIncome + i.getTotalPrice();
+                count++;
+            }
+        }
+        return "#Bill count is: " + count + "\t#Total Income is: " + totalIncome;
+    }
+
+    public String getAllIncomeForBranch(Integer branchId, Integer auth) {
+        Branch branch = branchRepository.findBranchById(branchId);
+        if (branch == null) {
+            throw new ApiException("Branch not found");
+        } else if (branch.getMerchant().getMyUser().getId() != auth) {
+            throw new ApiException("Sorry , You do not have the Authority !");
+        }
+
+        List<Employee> employees = employeeRepository.findAllEmployeeByBranchId(branchId);
+        double totalIncome = 0.0;
+        int countBill = employees.size();
+
+        for (Employee e : branch.getEmployees()) {
+            if (!e.getBill().isEmpty()) {
+                for (Bill bill : e.getBill()) {
+                    totalIncome = totalIncome + bill.getTotalPrice();
+                }
+            }
+        }
+        return "#All Brnch income is: " + totalIncome + " \t#Number of bill is: " + countBill;
+    }
+
+    public List<String[]> getAllDailyIncomeForMerchant(Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+        Merchant merchant = merchantRepository.findMerchantById(myUser.getMerchant().getId());
+        if (merchant == null) {
+            throw new ApiException("Merchant not found");
+        }
+
+        Map<LocalDate, Double> map = new HashMap<>();
+        merchant.getBill().forEach((i)->{
+            if(map.containsKey(i.getCreatedDate())){
+                double oldValue=map.get(i.getCreatedDate());
+                map.replace(i.getCreatedDate(), i.getTotalPrice() + oldValue);
+            }else {
+                map.put (i.getCreatedDate(), i.getTotalPrice());
+            }
+        });
+        return convertListToMap(map);
+    }
+
+    public Map<LocalDate, Integer> getAllDailyBillForMerchant(Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+        Merchant merchant = merchantRepository.findMerchantById(myUser.getMerchant().getId());
+        if (merchant == null) {
+            throw new ApiException("Merchant not found");
+        }
+
+        int count=1;
+        Map<LocalDate, Integer> map = new HashMap<>();
+        merchant.getBill().forEach((i)->{
+            if(map.containsKey(i.getCreatedDate())){
+                int oldValue=map.get(i.getCreatedDate());
+                map.replace(i.getCreatedDate(), oldValue+ 1);
+            }else {
+                map.put (i.getCreatedDate(), count);
+            }
+        });
+        return map;
+    }
+
+
+    public List<String[]> convertListToMap(Map<LocalDate,Double> map){
+        List<String[]> list = new ArrayList<>();
+        for(Map.Entry m: map.entrySet()){
+            list.add(new String[] {(String) m.getKey(), (String) m.getValue()});
+        }
+        return list;
     }
 }

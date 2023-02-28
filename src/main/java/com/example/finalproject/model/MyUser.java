@@ -43,7 +43,7 @@ public class MyUser implements UserDetails {
     private LocalDate createdAt;
 
     @NotEmpty(message = "Role must not be empty")
-    @Pattern(regexp = "(?:^|\\W)customer(?:$|\\W)|(?:^|\\W)admin(?:$|\\W)|(?:^|\\W)merchant(?:$|\\W)", message = "Role must be customer or merchant or admin ")
+    @Pattern(regexp = "(?:^|\\W)Customer(?:$|\\W)|(?:^|\\W)Admin(?:$|\\W)|(?:^|\\W)Merchant(?:$|\\W)", message = "Role must be customer or merchant or admin ")
 
 
 

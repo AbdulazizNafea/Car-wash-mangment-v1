@@ -74,6 +74,8 @@ public class RatingService {
         } else if (!customer.getBill().contains(bill)) {
             throw new ApiException("you don't have this bill");
         }
+        branch.setAvgRate(getBranchRating(branchId));
+
         rating.setBranch(branch);
         ratingRepository.save(rating);
     }
@@ -89,21 +91,82 @@ public class RatingService {
         } else if (!customer.getBill().contains(bill)) {
             throw new ApiException("you're not authorize to add rating , bill not found");
         }
+        employee.setAvgRate(getEmployeeRating(employeeId));
         rating.setEmployee(employee);
         ratingRepository.save(rating);
     }
+
+
 
     public void addRatingsToBill(RatingDTO rd, Integer auth, Integer billId) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
         Customer customer = customerRepository.findCustomerById(myUser.getCustomer().getId());
         Bill bill = billRepository.findBillById(billId);
         if (bill == null) {
-            throw new ApiException("Employee ID not found");
+            throw new ApiException("bill ID not found");
         } else if (!customer.getBill().contains(bill)) {
             throw new ApiException("cant add rate to bill tou dont own");
         }
         Rating rating = new Rating(null, rd.getRate(), rd.getComment(), null, null, bill);
         ratingRepository.save(rating);
     }
+
+
+    ///////////////////\\\\\\\\\\\\\\\\\\\\\\\\\
+    public Double getBranchRating(Integer branchId) {
+        Branch branch = branchRepository.findBranchById(branchId);
+        if (branch == null) {
+            throw new ApiException("Branch not found");
+        }
+        double avgRate = 0.0;
+        double sumRate = 0.0;
+        if (branch.getRatings().size() > 0) {
+            int count = branch.getRatings().size();
+            for (Rating rate : branch.getRatings()) {
+                sumRate = sumRate + rate.getRate();
+            }
+            avgRate = sumRate / count;
+        }
+
+        return avgRate;
+    }
+
+    public Double getBranchRatingInTimeRange(Integer branchId,String start, String end) {
+        Branch branch = branchRepository.findBranchById(branchId);
+        if (branch == null) {
+            throw new ApiException("Branch not found");
+        }
+        double avgRate = 0.0;
+        double sumRate = 0.0;
+        if (branch.getRatings().size() > 0) {
+            int count = branch.getRatings().size();
+            for (Rating rate : branch.getRatings()) {
+                sumRate = sumRate + rate.getRate();
+            }
+            avgRate = sumRate / count;
+        }
+
+        return avgRate;
+    }
+
+    public Double getEmployeeRating(Integer employeeId) {
+        Employee employee = employeeRepository.findEmployeeById(employeeId);
+        if (employee == null) {
+            throw new ApiException("Branch not found");
+        }
+        double avgRate = 0.0;
+        double sumRate = 0.0;
+        if (employee.getRatings().size() > 0) {
+            int count = employee.getRatings().size();
+            for (Rating rate : employee.getRatings()) {
+                sumRate = sumRate + rate.getRate();
+            }
+            avgRate = sumRate / count;
+        }
+
+        return avgRate;
+    }
+
+
 
 }

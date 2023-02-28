@@ -4,6 +4,7 @@ import com.example.finalproject.apiException.ApiException;
 import com.example.finalproject.model.Branch;
 import com.example.finalproject.model.Merchant;
 import com.example.finalproject.model.MyUser;
+import com.example.finalproject.model.Rating;
 import com.example.finalproject.repository.BranchRepository;
 import com.example.finalproject.repository.MerchantRepository;
 import com.example.finalproject.repository.MyUserRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class BranchService {
@@ -20,37 +22,39 @@ public class BranchService {
     private final MyUserRepository myUserRepository;
 
 
-    public List<Branch> getAll(){
+    public List<Branch> getAll() {
         return branchRepository.findAll();
     }
-    public List<Branch> getMyBranches(Integer auth){
+
+    public List<Branch> getMyBranches(Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
         List<Branch> branches = branchRepository.findAllBranchByMerchantId(myUser.getMerchant().getId());
-        if (branches.isEmpty()){
+        if (branches.isEmpty()) {
             throw new ApiException("Branches not found");
         }
         return branches;
     }
-    public Branch getById(Integer id,Integer auth){
+
+    public Branch getById(Integer id, Integer auth) {
         Branch branch = branchRepository.findBranchById(id);
         if (branch == null) {
             throw new ApiException("Branch not found");
-        }else if(branch.getMerchant().getMyUser().getId() != auth){
+        } else if (branch.getMerchant().getMyUser().getId() != auth) {
             throw new ApiException("Sorry , You do not have the authority to see this Branch !");
         }
         return branch;
     }
 
-    public void add(Branch branch,Integer auth){
+    public void add(Branch branch, Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
         branchRepository.save(branch);
     }
 
-    public void update(Branch branch,Integer id,Integer auth) {
-        Branch oldBranch= branchRepository.findBranchById(id);
-        if(oldBranch == null){
+    public void update(Branch branch, Integer id, Integer auth) {
+        Branch oldBranch = branchRepository.findBranchById(id);
+        if (oldBranch == null) {
             throw new ApiException("Branch ID not found");
-        }else if(oldBranch.getMerchant().getMyUser().getId() != auth){
+        } else if (oldBranch.getMerchant().getMyUser().getId() != auth) {
             throw new ApiException("Sorry , You do not have the authority to update this Branch !");
         }
         oldBranch.setName(branch.getName());
@@ -59,11 +63,11 @@ public class BranchService {
         branchRepository.save(oldBranch);
     }
 
-    public void delete(Integer id,Integer auth) {
-        Branch oldBranch= branchRepository.findBranchById(id);
-        if(oldBranch == null){
+    public void delete(Integer id, Integer auth) {
+        Branch oldBranch = branchRepository.findBranchById(id);
+        if (oldBranch == null) {
             throw new ApiException("Branch ID not found");
-        }else if(oldBranch.getMerchant().getMyUser().getId() != auth){
+        } else if (oldBranch.getMerchant().getMyUser().getId() != auth) {
             throw new ApiException("Sorry , You do not have the authority to delete this Branch !");
         }
         branchRepository.delete(oldBranch);
@@ -71,10 +75,10 @@ public class BranchService {
     /////////////////////////////////////////////////
     //assign here
 
-    public void addBranchToMerchant(Branch branch, Integer auth){
+    public void addBranchToMerchant(Branch branch, Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
         Merchant merchant = merchantRepository.findMerchantById(myUser.getMerchant().getId());
-        if (merchant == null ) {
+        if (merchant == null) {
             throw new ApiException("merchant ID not found");
         }
         branch.setMerchant(merchant);
@@ -82,6 +86,26 @@ public class BranchService {
         branchRepository.save(branch);
     }
 
+    //get Branch rating on time range
+    public Double getBranchRating(Integer branchId, Integer auth) {
+        Branch branch = branchRepository.findBranchById(branchId);
+        if (branch == null) {
+            throw new ApiException("Branch not found");
+        } else if (branch.getMerchant().getMyUser().getId() != auth) {
+            throw new ApiException("not allow auth");
+        }
+        double avgRate = 0.0;
+        double sumRate = 0.0;
+        if (branch.getRatings().size() < 0) {
+            int count = branch.getRatings().size();
+            for (Rating rate : branch.getRatings()) {
+                sumRate = sumRate + rate.getRate();
+            }
+            avgRate = sumRate / count;
+        }
+
+        return avgRate;
+    }
 
 
 }
