@@ -34,4 +34,6 @@ public class Car {
     @JsonIgnore
     private Customer customer;
 
+    public Car(Object o, String toyota, String suv, int i) {
+    }
 }

@@ -204,15 +204,17 @@ public class BillServices {
             throw new ApiException("not auth");
         }
         // Buy by Points
-        int totalPointPrice = 0;
+        int totalPointToBuy = 0;
         if (bill.getPaymentMethod().equalsIgnoreCase("point")) {
             for (ServicesProduct sp : bill.getServicesProducts()) {
-                totalPointPrice = sp.getTotalPoints() + totalPointPrice;
+                totalPointToBuy = sp.getTotalPoints() + totalPointToBuy;
             }
+
             if (point.getPoints() >= totalPointPrice) {
                 point.setPoints(point.getPoints() - totalPointPrice);
             } else {
                 throw new ApiException("Customer point balance not enough to buy this bill");
+
             }
         } else {
             point.setPoints(bill.getTotalPoints());
@@ -228,8 +230,6 @@ public class BillServices {
 
     public List<Bill> getBillByCreatedDateBetween(String start, String end) throws ParseException {
         //format string to date
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-
         List<Bill> bills = billRepository.findAllByCreatedDateBetween(LocalDate.parse(start), LocalDate.parse(end));
         return bills;
     }

@@ -45,4 +45,6 @@ public class Customer {
     private List<Bill> bill;
 
 
+    public Customer(Object o, String hashem, String ali, int i, String male) {
+    }
 }

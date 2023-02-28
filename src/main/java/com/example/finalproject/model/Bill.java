@@ -58,4 +58,6 @@ public class Bill {
     private Employee employee;
 
 
+    public Bill(Object o, double v, String cash, double v1) {
+    }
 }

@@ -6,6 +6,8 @@ import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 @AllArgsConstructor
 public class RatingDTO {
@@ -17,4 +19,5 @@ public class RatingDTO {
     private double rate;
 
     private String comment;
+    private LocalDate createdAt;
 }

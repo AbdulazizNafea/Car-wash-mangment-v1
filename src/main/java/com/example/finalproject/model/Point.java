@@ -31,4 +31,6 @@ public class Point {
     private Customer customer;
 
 
+    public Point(Object o, double v) {
+    }
 }

@@ -7,6 +7,8 @@ import com.example.finalproject.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -107,12 +109,12 @@ public class RatingService {
         } else if (!customer.getBill().contains(bill)) {
             throw new ApiException("cant add rate to bill tou dont own");
         }
-        Rating rating = new Rating(null, rd.getRate(), rd.getComment(), null, null, bill);
+        Rating rating = new Rating(null, rd.getRate(), rd.getComment(), rd.getCreatedAt(), null, null,bill);
         ratingRepository.save(rating);
     }
 
 
-    ///////////////////\\\\\\\\\\\\\\\\\\\\\\\\\
+    ///////////////////A\\\\\\\\\\\\\\\\\\\\\\\\\
     public Double getBranchRating(Integer branchId) {
         Branch branch = branchRepository.findBranchById(branchId);
         if (branch == null) {
@@ -166,6 +168,7 @@ public class RatingService {
 
         return avgRate;
     }
+
 
 
 

@@ -58,6 +58,9 @@ public class MyUser implements UserDetails {
     @PrimaryKeyJoinColumn
     private Merchant merchant;
 
+    public MyUser(Object o, String hashem, String s, String s1, String s2, Object o1, String merchant) {
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
