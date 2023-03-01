@@ -67,8 +67,10 @@ public class RatingController {
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 
-//    @GetMapping("/getEmpRatingFor/{empId}/start/{startDate}/end/{endDate}")
-//    public ResponseEntity getEmpRatingInTineRange(@PathVariable String startDate,@PathVariable String endDate, @PathVariable Integer empId, @AuthenticationPrincipal MyUser user){
-//        return ResponseEntity.status(HttpStatus.OK).body(ratingService.getEmpRatingInTineRange(startDate, endDate,user.getId(), empId));
-//    }
+    @GetMapping("/merchant/getBranchRatingInTimeRange/{branchId}/start/{startDate}/end/{endDate}")
+    public ResponseEntity getEmpRatingInTineRange(@PathVariable String startDate,@PathVariable String endDate, @PathVariable Integer branchId, @AuthenticationPrincipal MyUser user){
+        return ResponseEntity.status(HttpStatus.OK).body(ratingService.getBranchRatingInTimeRange(branchId,startDate, endDate,user.getId()));
+    }
+
+    //getBranchRatingInTimeRange
 }

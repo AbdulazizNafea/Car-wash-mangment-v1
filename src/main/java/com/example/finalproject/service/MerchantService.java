@@ -45,7 +45,8 @@ public class MerchantService {
     }
 
     public void delete(Integer id) {
-        Merchant merchant = merchantRepository.findMerchantById(id);
+        MyUser myUser = myUserRepository.findMyUserById(id);
+        Merchant merchant = merchantRepository.findMerchantById(myUser.getMerchant().getId());
         if (merchant == null) {
             throw new ApiException("Merchant ID not found");
         }
@@ -57,9 +58,7 @@ public class MerchantService {
     public void assignMyUserToMerchant2(MerchantDTO md, Integer auth) {
 
         MyUser myUser = myUserRepository.findMyUserById(auth);
-//        if (!myUser.getRole().equalsIgnoreCase("Merchant")) {
-//            throw new ApiException("This Page Only For Merchants!!!!");
-//        }
+
          if (myUser.getMerchant() != null) {
             throw new ApiException("Merchants Already Existing !");
         } else if (myUser == null) {

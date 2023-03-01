@@ -43,21 +43,25 @@ public class PointService {
     public List<Point> getMyPoint(Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
         List<Point> points = new ArrayList<>();
+
         if (myUser.getRole().equalsIgnoreCase("Merchant")) {
             points = pointRepository.findAllPointByMerchantId(myUser.getMerchant().getId());
         } else if (myUser.getRole().equalsIgnoreCase("Customer")) {
             points = pointRepository.findAllPointByMerchantId(myUser.getCustomer().getId());
         }
+
         if (points.isEmpty()) {
             throw new ApiException("no points");
         }
         return points;
     }
-
+//not used
     public void add(Point point) {
         pointRepository.save(point);
     }
 
+    /////////////////////////////////////////////////////
+    //not used
     public void update(Point newPoint, Integer id) {
         Point point = pointRepository.findPointById(id);
         if (point == null) {
@@ -80,6 +84,7 @@ public class PointService {
     public void assignPointToCustomerAndMerchant(Point newPoint, Integer customerId, Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
         Merchant merchant = merchantRepository.findMerchantById(myUser.getMerchant().getId());
+
         Customer customer = customRepository.findCustomerById(customerId);
         Point point = pointRepository.findPointByCustomerIdAndMerchantId(customerId, myUser.getMerchant().getId());
 

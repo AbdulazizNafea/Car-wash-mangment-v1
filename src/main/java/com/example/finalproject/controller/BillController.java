@@ -119,5 +119,11 @@ public class BillController {
         return ResponseEntity.status(HttpStatus.CREATED).body(billServices.getAllDailyBillForMerchant(myUser.getId()));
     }
 
+    //getAllIncomeForBranch
+    @GetMapping("/merchant/getAllIncomeForBranch/{branchId}")
+    public ResponseEntity getAllDailyBillForMerchant(@AuthenticationPrincipal MyUser myUser,@PathVariable Integer branchId) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(billServices.getAllIncomeForBranch(branchId,myUser.getId()));
+    }
+
 
 }

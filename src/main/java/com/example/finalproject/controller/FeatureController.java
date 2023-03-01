@@ -28,6 +28,11 @@ public class FeatureController {
         return ResponseEntity.status(HttpStatus.OK).body(featureService.getFeatureByBranchId(id));
     }
 
+    //getAllFeaturesByBranchId
+    @GetMapping("/getAllFeaturesByBranchId/{id}")
+    public ResponseEntity getAllFeaturesByBranchId(@PathVariable Integer id) {
+        return ResponseEntity.status(HttpStatus.OK).body(featureService.getAllFeaturesByBranchId(id));
+    }
 
     ///////////////////merchant Role\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 

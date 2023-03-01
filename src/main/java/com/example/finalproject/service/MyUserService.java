@@ -2,8 +2,6 @@ package com.example.finalproject.service;
 
 import com.example.finalproject.apiException.ApiException;
 import com.example.finalproject.model.MyUser;
-import com.example.finalproject.repository.CustomerRepository;
-import com.example.finalproject.repository.MerchantRepository;
 import com.example.finalproject.repository.MyUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,9 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MyUserService {
 
-    private final MerchantRepository merchantRepository;
     private final MyUserRepository myUserRepository;
-    private final CustomerRepository customerRepository;
 
 
     // crud here
@@ -44,16 +40,17 @@ public class MyUserService {
         myUserRepository.save(user);
     }
 
-    public void update(MyUser newMyUser, Integer id) {
-        MyUser myUser = myUserRepository.findMyUserById(id);
+    public void update(Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
         if (myUser == null) {
             throw new ApiException("User ID not found");
         }
+        myUser.setRole(myUser.getRole());
         myUserRepository.save(myUser);
     }
 
-    public void delete(Integer id) {
-        MyUser myUser = myUserRepository.findMyUserById(id);
+    public void delete(Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
         if (myUser == null) {
             throw new ApiException("User ID not found");
         }

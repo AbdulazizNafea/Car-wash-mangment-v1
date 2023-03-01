@@ -24,15 +24,15 @@ public class ServicesProductController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity getById(@PathVariable Integer id) {
-        return ResponseEntity.status(HttpStatus.OK).body(servicesProductService.getById(id));
+    public ResponseEntity getById(@PathVariable Integer id,@AuthenticationPrincipal MyUser myUser) {
+        return ResponseEntity.status(HttpStatus.OK).body(servicesProductService.getById(id,myUser.getId()));
     }
 
-//    @PostMapping("/add")
-//    public ResponseEntity add(@RequestBody @Valid ServicesProduct servicesProduct) {
-//        servicesProductService.add(servicesProduct);
-//        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
-//    }
+//getByBranchId
+@GetMapping("/getByBranchId/{branchId}")
+public ResponseEntity getByBranchId(@PathVariable Integer branchId,@AuthenticationPrincipal MyUser myUser) {
+    return ResponseEntity.status(HttpStatus.OK).body(servicesProductService.getByBranchId(branchId,myUser.getId()));
+}
 
     @PutMapping("/merchant/update/{id}")
     public ResponseEntity update(@RequestBody @Valid ServicesProduct servicesProduct, @PathVariable Integer id, @AuthenticationPrincipal MyUser myUser) {
