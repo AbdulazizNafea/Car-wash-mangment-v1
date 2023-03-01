@@ -20,4 +20,4 @@ https://www.figma.com/file/SCL8G84tYZRALqkxnZSbFV/%D9%85%D9%86%D8%B5%D8%A9-%D8%B
 
 # Class Diagram
 
-![WhatsApp Image 2023-03-01 at 5 38 16 PM](https://user-images.githubusercontent.com/78857323/222172912-e7f726ac-6737-446e-b69a-a5fd878e0f2e.jpeg)
+![carwashservices](https://user-images.githubusercontent.com/78857323/222173492-5cdee515-ba69-49e8-941e-989be71fc73c.png)
