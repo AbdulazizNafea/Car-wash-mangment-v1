@@ -44,9 +44,9 @@ public class MerchantController {
         return ResponseEntity.status(HttpStatus.CREATED).body("UPDATED");
     }
 
-    @DeleteMapping("/merchant/delete/{id}")
-    public ResponseEntity delete(@PathVariable Integer id) {
-        merchantService.delete(id);
+    @DeleteMapping("/merchant/delete")
+    public ResponseEntity delete(@AuthenticationPrincipal MyUser myUser) {
+        merchantService.delete(myUser.getId());
         return ResponseEntity.status(HttpStatus.OK).body("DELETED");
     }
     //////////////////////////////////////

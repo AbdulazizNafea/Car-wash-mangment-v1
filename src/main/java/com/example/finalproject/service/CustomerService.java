@@ -52,12 +52,13 @@ public class CustomerService {
         customerRepository.save(oldCustomer);
     }
 
-    public void delete(Integer id) {
-        Customer customer = customerRepository.findCustomerById(id);
-        if (customer == null) {
+    public void delete(Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+        Customer oldCustomer = customerRepository.findCustomerById(myUser.getCustomer().getId());
+        if (oldCustomer == null) {
             throw new ApiException("Customer ID not found");
         }
-        customerRepository.delete(customer);
+        customerRepository.delete(oldCustomer);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -70,7 +71,6 @@ public class CustomerService {
         } else if (myUser.getCustomer() != null) {
             throw new ApiException("Customer Already Exist!!!!");
         }
-//        myUser.setRole("Customer");
         myUserRepository.save(myUser);
         Customer myCustomer = new Customer(null, cd.getFirstName(), cd.getLastName(), cd.getAge(), cd.getGender(), myUser, null, null, null);
         customerRepository.save(myCustomer);

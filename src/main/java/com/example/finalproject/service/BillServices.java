@@ -5,16 +5,10 @@ import com.example.finalproject.apiException.ApiException;
 import com.example.finalproject.model.*;
 import com.example.finalproject.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.parser.Entity;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,6 +127,7 @@ public class BillServices {
         }
         double totalPrice = bill.getTotalPrice();
         double totalPoints = bill.getTotalPoints();
+
         bill.setCreatedDate(LocalDate.now());
         bill.setTotalPrice(sp.getPrice() + totalPrice);
         bill.setTotalPoints(sp.getPoint() + totalPoints);
@@ -141,6 +136,7 @@ public class BillServices {
         billRepository.save(bill);
     }
 
+    // Not used
     public void addEmployToBill(Integer employeeId, Integer billId, Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
         Bill bill = billRepository.findBillById(billId);
@@ -204,17 +200,15 @@ public class BillServices {
             throw new ApiException("not auth");
         }
         // Buy by Points
-        int totalPointToBuy = 0;
+        int totalPointPrice = 0;
         if (bill.getPaymentMethod().equalsIgnoreCase("point")) {
             for (ServicesProduct sp : bill.getServicesProducts()) {
-                totalPointToBuy = sp.getTotalPoints() + totalPointToBuy;
+                totalPointPrice = sp.getTotalPoints() + totalPointPrice;
             }
-
             if (point.getPoints() >= totalPointPrice) {
                 point.setPoints(point.getPoints() - totalPointPrice);
             } else {
                 throw new ApiException("Customer point balance not enough to buy this bill");
-
             }
         } else {
             point.setPoints(bill.getTotalPoints());
@@ -276,19 +270,20 @@ public class BillServices {
 
         List<Employee> employees = employeeRepository.findAllEmployeeByBranchId(branchId);
         double totalIncome = 0.0;
-        int countBill = employees.size();
+        int countBill = 0;
 
         for (Employee e : branch.getEmployees()) {
             if (!e.getBill().isEmpty()) {
                 for (Bill bill : e.getBill()) {
                     totalIncome = totalIncome + bill.getTotalPrice();
+                    countBill++;
                 }
             }
         }
-        return "#All Brnch income is: " + totalIncome + " \t#Number of bill is: " + countBill;
+        return "#All Branch income is: " + totalIncome + " \t#Number of bill is: " + countBill;
     }
 
-    public List<String[]> getAllDailyIncomeForMerchant(Integer auth) {
+    public Map<LocalDate,Double> getAllDailyIncomeForMerchant(Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
         Merchant merchant = merchantRepository.findMerchantById(myUser.getMerchant().getId());
         if (merchant == null) {
@@ -304,7 +299,7 @@ public class BillServices {
                 map.put (i.getCreatedDate(), i.getTotalPrice());
             }
         });
-        return convertListToMap(map);
+        return map;
     }
 
     public Map<LocalDate, Integer> getAllDailyBillForMerchant(Integer auth) {
@@ -327,12 +322,15 @@ public class BillServices {
         return map;
     }
 
+/////////////////////just for test in my mind\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    //this function it will take Map and convert it to list
+    // it working fine but issue in LocalDate not allow to convert it to string
 
-    public List<String[]> convertListToMap(Map<LocalDate,Double> map){
-        List<String[]> list = new ArrayList<>();
-        for(Map.Entry m: map.entrySet()){
-            list.add(new String[] {(String) m.getKey(), (String) m.getValue()});
-        }
-        return list;
-    }
+//    public List<String[]> convertListToMap(Map<LocalDate,Double> map){
+//        List<String[]> list = new ArrayList<>();
+//        for(Map.Entry m: map.entrySet()){
+//            list.add(new String[] {(String) m.getKey(), (String) m.getValue()});
+//        }
+//        return list;
+//    }
 }

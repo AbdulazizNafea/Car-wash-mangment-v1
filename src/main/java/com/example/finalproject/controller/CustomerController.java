@@ -40,9 +40,9 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.CREATED).body("UPDATED");
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity delete(@PathVariable Integer id) {
-        customerService.delete(id);
+    @DeleteMapping("/delete")
+    public ResponseEntity delete(@AuthenticationPrincipal MyUser myUser) {
+        customerService.delete(myUser.getId());
         return ResponseEntity.status(HttpStatus.OK).body("DELETED");
     }
 

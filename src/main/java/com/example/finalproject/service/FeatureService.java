@@ -30,6 +30,14 @@ public class FeatureService {
         }
         return feature;
     }
+    /////////////////
+    public List<Feature> getAllFeaturesByBranchId(Integer branchId){
+        List<Feature>  feature = featureRepository.findAllFeatureByBranchId(branchId);
+        if (feature == null) {
+            throw new ApiException("feature not found");
+        }
+        return feature;
+    }
 
 
     public void update(Feature newFeature,Integer id,Integer auth) {

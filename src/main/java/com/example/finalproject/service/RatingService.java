@@ -7,8 +7,6 @@ import com.example.finalproject.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -133,10 +131,12 @@ public class RatingService {
         return avgRate;
     }
 
-    public Double getBranchRatingInTimeRange(Integer branchId,String start, String end) {
+    public Double getBranchRatingInTimeRange(Integer branchId,String start, String end,Integer auth) {
         Branch branch = branchRepository.findBranchById(branchId);
         if (branch == null) {
             throw new ApiException("Branch not found");
+        }else if (branch.getMerchant().getMyUser().getId() != auth){
+            throw new ApiException("you dont hava access");
         }
         double avgRate = 0.0;
         double sumRate = 0.0;

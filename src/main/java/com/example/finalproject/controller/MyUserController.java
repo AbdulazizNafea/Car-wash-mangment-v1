@@ -28,31 +28,20 @@ public class MyUserController {
         return ResponseEntity.status(201).body(myUserService.getMyUser(myUser.getId()));
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity update(@RequestBody @Valid MyUser myUser, @PathVariable Integer id) {
-        myUserService.update(myUser, id);
+    @PutMapping("/update")
+    public ResponseEntity update(@RequestBody @Valid MyUser myUser, @AuthenticationPrincipal Integer id) {
+        myUserService.update( myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("UPDATED");
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity delete(@PathVariable Integer id) {
-        myUserService.delete(id);
+    @DeleteMapping("/delete")
+    public ResponseEntity delete(@AuthenticationPrincipal MyUser myUser) {
+        myUserService.delete(myUser.getId());
         return ResponseEntity.status(HttpStatus.OK).body("DELETED");
     }
 
     //////////////////////////////////////////////////////////////////
     //assign here
-
-//    @PostMapping("/assignMerchant")
-//    public ResponseEntity assignMerchant(@RequestBody MyUserDTO md){
-//       myUserService.assignMyUserToMerchant(md);
-//        return   ResponseEntity.status(200).body("Add Address Done");
-//    }
-//    @PutMapping("/assignCustomer")
-//    public ResponseEntity assignCustomer(@RequestBody MyUserDTO md){
-//        myUserService.assignMyUserToCustomer(md);
-//        return   ResponseEntity.status(200).body("Add Address Done");
-//    }
 
     ///////////////////////\
     @PostMapping("/register")

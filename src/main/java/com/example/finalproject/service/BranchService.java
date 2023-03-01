@@ -4,7 +4,6 @@ import com.example.finalproject.apiException.ApiException;
 import com.example.finalproject.model.Branch;
 import com.example.finalproject.model.Merchant;
 import com.example.finalproject.model.MyUser;
-import com.example.finalproject.model.Rating;
 import com.example.finalproject.repository.BranchRepository;
 import com.example.finalproject.repository.MerchantRepository;
 import com.example.finalproject.repository.MyUserRepository;
@@ -26,6 +25,7 @@ public class BranchService {
         return branchRepository.findAll();
     }
 
+
     public List<Branch> getMyBranches(Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
         List<Branch> branches = branchRepository.findAllBranchByMerchantId(myUser.getMerchant().getId());
@@ -45,8 +45,8 @@ public class BranchService {
         return branch;
     }
 
+    // not used
     public void add(Branch branch, Integer auth) {
-        MyUser myUser = myUserRepository.findMyUserById(auth);
         branchRepository.save(branch);
     }
 
@@ -85,27 +85,4 @@ public class BranchService {
         branch.setCreated(LocalDate.now());
         branchRepository.save(branch);
     }
-
-    //get Branch rating on time range
-    public Double getBranchRating(Integer branchId, Integer auth) {
-        Branch branch = branchRepository.findBranchById(branchId);
-        if (branch == null) {
-            throw new ApiException("Branch not found");
-        } else if (branch.getMerchant().getMyUser().getId() != auth) {
-            throw new ApiException("not allow auth");
-        }
-        double avgRate = 0.0;
-        double sumRate = 0.0;
-        if (branch.getRatings().size() < 0) {
-            int count = branch.getRatings().size();
-            for (Rating rate : branch.getRatings()) {
-                sumRate = sumRate + rate.getRate();
-            }
-            avgRate = sumRate / count;
-        }
-
-        return avgRate;
-    }
-
-
 }

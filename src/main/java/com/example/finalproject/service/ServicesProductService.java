@@ -29,10 +29,24 @@ public class ServicesProductService {
     }
 
     //all role
-    public ServicesProduct getById(Integer id){
+    public ServicesProduct getById(Integer id, Integer auth){
+        MyUser myUser = myUserRepository.findMyUserById(auth);
         ServicesProduct servicesProduct = servicesProductRepository.findServicesProductById(id);
         if (servicesProduct == null) {
             throw new ApiException("service Product not found");
+        }else if (servicesProduct.getBranch().getMerchant().getMyUser().getId() != auth) {
+            throw new ApiException("you dont hava access");
+        }
+        return servicesProduct;
+    }
+
+    public List<ServicesProduct> getByBranchId(Integer branchId, Integer auth){
+        Branch branch = branchRepository.findBranchById(branchId);
+        List<ServicesProduct> servicesProduct = servicesProductRepository.findAllServicesProductByBranchId(branchId);
+        if (servicesProduct == null) {
+            throw new ApiException("service Product not found");
+        }else if (branch.getMerchant().getMyUser().getId() != auth) {
+            throw new ApiException("you dont hava access");
         }
         return servicesProduct;
     }
