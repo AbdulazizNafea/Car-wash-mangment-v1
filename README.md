@@ -20,4 +20,4 @@ https://www.figma.com/file/SCL8G84tYZRALqkxnZSbFV/%D9%85%D9%86%D8%B5%D8%A9-%D8%B
 
 # Class Diagram
 
-![carwashservices](https://user-images.githubusercontent.com/78857323/222173492-5cdee515-ba69-49e8-941e-989be71fc73c.png)
+![carwashservices](https://user-images.githubusercontent.com/78857323/222176294-ee519ee7-1ef1-4542-9953-b3d00ff809fe.png)
