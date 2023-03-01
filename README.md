@@ -15,7 +15,8 @@ Although, he can have points as a loyality program after buying each service to 
 
 Also the platform give the cutomer the ability to to see the features,services,location for all companies.
 
-
+# UI/UX
+https://www.figma.com/file/SCL8G84tYZRALqkxnZSbFV/%D9%85%D9%86%D8%B5%D8%A9-%D8%BA%D8%B3%D9%84%D8%A9?t=uXLL6g6r9Er9rOf7-6
 
 # Class Diagram
 ![DB Daigram](https://user-images.githubusercontent.com/78857323/221378246-2913406b-23ef-4e96-afc6-32803b4b2355.jpeg)
