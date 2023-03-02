@@ -37,6 +37,7 @@ public class MyUserService {
         LocalDate date = LocalDate.now();
         user.setCreatedAt(date);
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        user.setEnable(true);
         myUserRepository.save(user);
     }
 
@@ -54,6 +55,7 @@ public class MyUserService {
         if (myUser == null) {
             throw new ApiException("User ID not found");
         }
-        myUserRepository.delete(myUser);
+        myUser.setEnable(false);
+        myUserRepository.save(myUser);
     }
 }
