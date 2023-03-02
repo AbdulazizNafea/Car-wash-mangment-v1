@@ -50,6 +50,8 @@ public class MyUser implements UserDetails {
 
     private String role;
 
+    private boolean enable;
+
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "myUser")
     @PrimaryKeyJoinColumn
     private Customer customer;
@@ -84,6 +86,6 @@ public class MyUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.enable;
     }
 }

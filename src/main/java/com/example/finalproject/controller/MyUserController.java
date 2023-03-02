@@ -34,7 +34,7 @@ public class MyUserController {
         return ResponseEntity.status(HttpStatus.CREATED).body("UPDATED");
     }
 
-    @DeleteMapping("/delete")
+    @PutMapping("/delete")
     public ResponseEntity delete(@AuthenticationPrincipal MyUser myUser) {
         myUserService.delete(myUser.getId());
         return ResponseEntity.status(HttpStatus.OK).body("DELETED");
