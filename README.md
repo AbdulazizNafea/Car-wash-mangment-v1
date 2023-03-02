@@ -1,7 +1,7 @@
 # Car-wash-mangment-v1
-Postman: https://documenter.getpostman.com/view/25472545/2s93CRMCat
 
-# Project Details
+
+## Project Details
 
 Ghasla platform
 
@@ -15,9 +15,14 @@ Although, he can have points as a loyality program after buying each service to 
 
 Also the platform give the cutomer the ability to to see the features,services,location for all companies.
 
-# UI/UX
+##Postman
+https://documenter.getpostman.com/view/25472545/2s93CRMCat
+
+## UI/UX
 https://www.figma.com/file/SCL8G84tYZRALqkxnZSbFV/%D9%85%D9%86%D8%B5%D8%A9-%D8%BA%D8%B3%D9%84%D8%A9?t=uXLL6g6r9Er9rOf7-6
 
-# Class Diagram
+## Class Diagram
 
 ![carwashservices](https://user-images.githubusercontent.com/78857323/222176294-ee519ee7-1ef1-4542-9953-b3d00ff809fe.png)
+
+## UseCase![Final_Project-Page-2](https://user-images.githubusercontent.com/78857323/222361619-1fe69ca8-7731-49c7-b31e-baf3b690c675.jpg)
