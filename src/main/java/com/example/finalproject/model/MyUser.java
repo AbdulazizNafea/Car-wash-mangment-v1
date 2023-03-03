@@ -43,14 +43,12 @@ public class MyUser implements UserDetails {
     private LocalDate createdAt;
 
     @NotEmpty(message = "Role must not be empty")
-    @Pattern(regexp = "(?:^|\\W)Customer(?:$|\\W)|(?:^|\\W)Admin(?:$|\\W)|(?:^|\\W)Merchant(?:$|\\W)", message = "Role must be customer or merchant or admin ")
-
-
-
-
+    @Pattern(regexp = "(Customer|Admin|Merchant|Cashier)", message = "Role must be customer or merchant or admin ")
     private String role;
 
-    private boolean enable;
+    private boolean enable = true;
+
+    private boolean locked = true;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "myUser")
     @PrimaryKeyJoinColumn
@@ -60,8 +58,11 @@ public class MyUser implements UserDetails {
     @PrimaryKeyJoinColumn
     private Merchant merchant;
 
-    public MyUser(Object o, String hashem, String s, String s1, String s2, Object o1, String merchant) {
-    }
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "myUser")
+    @PrimaryKeyJoinColumn
+    private Employee employee;
+
+
 
 
     @Override
@@ -76,7 +77,7 @@ public class MyUser implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return this.locked;
     }
 
     @Override

@@ -1,13 +1,10 @@
 package com.example.finalproject.controller;
 
 import com.example.finalproject.DTO.MerchantDTO;
-import com.example.finalproject.DTO.MyUserDTO;
-import com.example.finalproject.model.Branch;
 import com.example.finalproject.model.Merchant;
 import com.example.finalproject.model.MyUser;
 import com.example.finalproject.service.MerchantService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,10 +48,31 @@ public class MerchantController {
     }
     //////////////////////////////////////
     //assign here
-    @PostMapping("/assignU")
+    @PostMapping("/merchant/assignU")
     public ResponseEntity assignU(@RequestBody @Valid MerchantDTO md,@AuthenticationPrincipal MyUser myUser) {
         merchantService.assignMyUserToMerchant2(md,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
+    }
+
+    //registerEmployeeAsCashier
+    @PostMapping("/merchant/registerEmployeeAsCashier/employee_Id{employeeId}")
+    public ResponseEntity registerEmployeeAsCashier(@RequestBody @Valid MyUser newmyUser,@AuthenticationPrincipal MyUser myUser,@PathVariable Integer employeeId) {
+        merchantService.registerEmployeeAsCashier(newmyUser,employeeId,myUser.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
+    }
+
+    //updateEmployCashier
+    @PostMapping("/merchant/updateEmployCashier/employee_Id{employeeId}")
+    public ResponseEntity updateEmployCashier(@RequestBody @Valid MyUser newmyUser,@AuthenticationPrincipal MyUser myUser,@PathVariable Integer employeeId) {
+        merchantService.updateEmployCashier(newmyUser,employeeId,myUser.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body("updated");
+    }
+
+    //deleteCashier
+    @DeleteMapping("/merchant/deleteCashier/employee_Id{employeeId}")
+    public ResponseEntity deleteCashier(@AuthenticationPrincipal MyUser myUser,@PathVariable Integer employeeId) {
+        merchantService.deleteCashier(myUser.getId(),employeeId);
+        return ResponseEntity.status(HttpStatus.CREATED).body("deleted");
     }
 
 }

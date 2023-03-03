@@ -37,7 +37,7 @@ public class Merchant {
 
      */
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne
 //    @MapsId
     @JsonIgnore
     private MyUser myUser;
