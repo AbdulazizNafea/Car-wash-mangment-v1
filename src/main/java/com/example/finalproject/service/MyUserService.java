@@ -41,19 +41,23 @@ public class MyUserService {
         myUserRepository.save(user);
     }
 
-    public void update(Integer auth) {
+    public void update(Integer auth,MyUser newMyUser) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
         if (myUser == null) {
             throw new ApiException("User ID not found");
+        }else if(myUser.getRole().equalsIgnoreCase("cashier")){
+            throw new ApiException("Merchant only allow to update your account");
         }
         myUser.setRole(myUser.getRole());
-        myUserRepository.save(myUser);
+        myUserRepository.save(newMyUser);
     }
 
     public void delete(Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
         if (myUser == null) {
             throw new ApiException("User ID not found");
+        }else if(myUser.getRole().equalsIgnoreCase("cashier")){
+            throw new ApiException("Merchant only allow to delete your account");
         }
         myUser.setEnable(false);
         myUserRepository.save(myUser);

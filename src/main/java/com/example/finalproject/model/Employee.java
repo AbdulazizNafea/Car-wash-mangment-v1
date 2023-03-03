@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import java.util.List;
 
@@ -25,6 +26,10 @@ public class Employee {
 
     private double avgRate;
 
+    @OneToOne(cascade = CascadeType.ALL)
+//    @MapsId
+    @JsonIgnore
+    private MyUser myUser;
 
     @ManyToOne
     @JoinColumn(name = "branch_id", referencedColumnName ="id")

@@ -35,7 +35,7 @@ public class AuthConfig {
                 .authenticationProvider(daoAuthenticationProvider())
                 .authorizeHttpRequests()
                 .requestMatchers("/api/v1/user/register").permitAll()
-                .requestMatchers("/api/v1/bill/merchant/**", "/api/v1/employee", "/api/v1/feature/merchant/**", "/api/v1/product/merchant/**", "/api/v1/branch/merchant/**").hasAuthority("Merchant")
+                .requestMatchers("/api/v1/bill/merchant/**", "/api/v1/employee/**", "/api/v1/feature/merchant/**", "/api/v1/product/merchant/**", "/api/v1/branch/merchant/**","/api/v1/merchant/merchant/**").hasAuthority("Merchant")
                 .requestMatchers("/api/v1/bill/customer/**", "/api/v1/car", "/api/v1/customer", "/api/v1/rating/customer/**").hasAuthority("Customer")
                 .anyRequest().authenticated()
                 .and()

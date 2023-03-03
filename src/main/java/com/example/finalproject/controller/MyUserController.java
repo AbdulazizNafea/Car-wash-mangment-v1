@@ -29,8 +29,8 @@ public class MyUserController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity update(@RequestBody @Valid MyUser myUser, @AuthenticationPrincipal Integer id) {
-        myUserService.update( myUser.getId());
+    public ResponseEntity update(@RequestBody @Valid MyUser newmyUser, @AuthenticationPrincipal MyUser myUser) {
+        myUserService.update(myUser.getId(), newmyUser);
         return ResponseEntity.status(HttpStatus.CREATED).body("UPDATED");
     }
 
