@@ -35,7 +35,8 @@ public class AuthConfig {
                 .authenticationProvider(daoAuthenticationProvider())
                 .authorizeHttpRequests()
                 .requestMatchers("/api/v1/user/register").permitAll()
-                .requestMatchers("/api/v1/bill/merchant/**", "/api/v1/employee/**", "/api/v1/feature/merchant/**", "/api/v1/product/merchant/**", "/api/v1/branch/merchant/**","/api/v1/merchant/merchant/**").hasAuthority("Merchant")
+                .requestMatchers("/api/v1/bill/merchant/**","/api/v1/employee/**", "/api/v1/feature/merchant/**", "/api/v1/product/merchant/**", "/api/v1/branch/merchant/**","/api/v1/merchant/merchant/**").hasAuthority("Merchant")
+                .requestMatchers("/api/v1/bill/Cashier/**").hasAuthority("Cashier")
                 .requestMatchers("/api/v1/bill/customer/**", "/api/v1/car", "/api/v1/customer", "/api/v1/rating/customer/**").hasAuthority("Customer")
                 .anyRequest().authenticated()
                 .and()
@@ -47,3 +48,8 @@ public class AuthConfig {
         return http.build();
     }
 }
+//how i can use same end point for different users role ??
+//for now, I will use my shit way, tomorrow I will start aging.
+//Note:
+//https://docs.spring.io/spring-security/site/docs/3.0.x/reference/core-web-filters.html
+//https://docs.spring.io/spring-security/site/docs/3.0.x/reference/el-access.html
