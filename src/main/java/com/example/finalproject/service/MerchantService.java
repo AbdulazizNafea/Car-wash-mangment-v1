@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+//Hello Big boss, you're handsome
+
 @Service
 @RequiredArgsConstructor
 public class MerchantService {
@@ -49,8 +51,8 @@ public class MerchantService {
         merchantRepository.save(merchant);
     }
 
-    public void delete(Integer id) {
-        MyUser myUser = myUserRepository.findMyUserById(id);
+    public void delete(Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
         Merchant merchant = merchantRepository.findMerchantById(myUser.getMerchant().getId());
         if (merchant == null) {
             throw new ApiException("Merchant ID not found");
@@ -76,6 +78,7 @@ public class MerchantService {
     }
 
 
+    //challenge 2-
     public void registerEmployeeAsCashier(MyUser user, Integer employeeId, Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
 
@@ -106,6 +109,7 @@ public class MerchantService {
 
     }
 
+    //challenge 3-
     public void updateEmployCashier(MyUser user, Integer employeeId, Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
 

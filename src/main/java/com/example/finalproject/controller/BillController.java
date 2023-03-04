@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 
 @RestController
 @RequestMapping("/api/v1/bill")
@@ -49,54 +48,75 @@ public class BillController {
         return ResponseEntity.status(HttpStatus.OK).body(billServices.getBillByIdForMerchant(myUser.getId(), billId));
     }
 
+    //merchant
     @PostMapping("/merchant/add")
     public ResponseEntity add(@RequestBody @Valid Bill bill) {
         billServices.add(bill);
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 
+    //cashier
+    @PostMapping("/cashier/add")
+    public ResponseEntity add2(@RequestBody @Valid Bill bill) {
+        billServices.add(bill);
+        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
+    }
+
     @PutMapping("/merchant/update/{id}")
-    public ResponseEntity update(@RequestBody @Valid Bill bill, @PathVariable Integer id) {
-        billServices.update(bill, id);
+    public ResponseEntity update(@RequestBody @Valid Bill bill, @PathVariable Integer id,@AuthenticationPrincipal MyUser myUser) {
+        billServices.update(bill, id,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("UPDATED");
     }
 
-    @DeleteMapping("/merchant/delete/{id}")
-    public ResponseEntity delete(@PathVariable Integer id) {
-        billServices.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).body("DELETED");
-    }
+//    @DeleteMapping("/merchant/delete/{id}")
+//    public ResponseEntity delete(@PathVariable Integer id) {
+//        billServices.delete(id);
+//        return ResponseEntity.status(HttpStatus.OK).body("DELETED");
+//    }
 
     //======================================
     //Assign here
-    @PostMapping("/merchant/addServicesToBill/product_id-{spId}/bill_id-{billId}/branch_id{branchId}")
+
+    //merchant
+    @PostMapping("/merchant/addServicesToBill/product_id-{spId}/bill_id-{billId}/branch_id-{branchId}")
     public ResponseEntity addServicesToBill(@PathVariable Integer billId, @PathVariable Integer branchId, @PathVariable Integer spId, @AuthenticationPrincipal MyUser myUser) {
         billServices.addServicesToBill(spId, billId, branchId, myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 
+    //cashier
+    @PostMapping("/cashier/addServicesToBill/product_id-{spId}/bill_id-{billId}/branch_id{branchId}")
+    public ResponseEntity addServicesToBill2(@PathVariable Integer billId, @PathVariable Integer branchId, @PathVariable Integer spId, @AuthenticationPrincipal MyUser myUser) {
+        billServices.addServicesToBill(spId, billId, branchId, myUser.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
+    }
+
+    //merchant
     @PutMapping("/merchant/removeServicesFromBill/{spId}/{billId}")
     public ResponseEntity removeServicesFromBill(@PathVariable Integer billId, @PathVariable Integer spId) {
         billServices.removeServicesFromBill(spId, billId);
         return ResponseEntity.status(HttpStatus.CREATED).body("removed");
     }
 
+    //cashier
+    @PutMapping("/cashier/removeServicesFromBill/{spId}/{billId}")
+    public ResponseEntity removeServicesFromBill2(@PathVariable Integer billId, @PathVariable Integer spId) {
+        billServices.removeServicesFromBill(spId, billId);
+        return ResponseEntity.status(HttpStatus.CREATED).body("removed");
+    }
+
+    //merchant
     @PostMapping("/merchant/addBillToCustomer/bill_id-{billId}/customer_id-{customerId}/employee_id-{employeeId}")
     public ResponseEntity addBillToCustomerAndMerchantAndEmployee(@PathVariable Integer customerId, @PathVariable Integer billId, @PathVariable Integer employeeId, @AuthenticationPrincipal MyUser myUser) {
         billServices.addBillToCustomerAndMerchantAndEmployee(customerId, billId, employeeId, myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 
-    @PostMapping("/merchant/addEmployToBill/{employeeId}/{billId}")
-    public ResponseEntity addEmployToBill(@AuthenticationPrincipal MyUser myUser, @PathVariable Integer billId, @PathVariable Integer employeeId) {
-        billServices.addEmployToBill(employeeId, billId, myUser.getId());
+    //cashier
+    @PostMapping("/cashier/addBillToCustomer/bill_id-{billId}/customer_id-{customerId}/employee_id-{employeeId}")
+    public ResponseEntity addBillToCustomerAndMerchantAndEmployee2(@PathVariable Integer customerId, @PathVariable Integer billId, @PathVariable Integer employeeId, @AuthenticationPrincipal MyUser myUser) {
+        billServices.addBillToCustomerAndMerchantAndEmployee(customerId, billId, employeeId, myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
-    }
-
-    @GetMapping("/start/{start}/end/{end}")
-    public ResponseEntity time(@PathVariable String start, @PathVariable String end) throws ParseException {
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(billServices.getBillByCreatedDateBetween(start, end));
     }
 
     @GetMapping("/merchant/getAllIncomeForMerchant")

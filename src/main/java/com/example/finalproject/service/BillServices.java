@@ -7,11 +7,19 @@ import com.example.finalproject.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+/*
+ * Author : Abdulaziz N. Alamri
+ * 04-03-2023
+ * it does not finish yet.
+ * line 165 coming back to you.
+ * A يارب ارفع عني حمل التفكير و الترتيب
+ * A ودبر لي أمري فإني لا أحسن التدبير
+ */
 
 @Service
 @RequiredArgsConstructor
@@ -82,10 +90,12 @@ public class BillServices {
         billRepository.save(bill);
     }
 
-    public void update(Bill newBill, Integer id) {
+    public void update(Bill newBill, Integer id, Integer auth) {
         Bill bill = billRepository.findBillById(id);
         if (bill == null) {
             throw new ApiException("bill ID not found");
+        } else if (bill.getMerchant().getMyUser().getId() != auth) {
+            throw new ApiException("not authorize");
         }
         bill.setTotalPrice(newBill.getTotalPrice());
         bill.setPaymentMethod(newBill.getPaymentMethod());
@@ -93,29 +103,52 @@ public class BillServices {
         billRepository.save(bill);
     }
 
-    public void delete(Integer id) {
-        Bill bill = billRepository.findBillById(id);
-        if (bill == null) {
-            throw new ApiException("Feature ID not found");
-        }
-        billRepository.delete(bill);
-    }
+    // الحذف ما ينفع بفكر بطريقة غير الحذف
+    // ممكن دبل أشيك على الفاتورة اذا كانت فاضية أسمح له يحذفها
+    // ممكن اسويلها enable=false ممكن اسويلها الغاء للعلاقة
+    // أبعتذر عن كل شي الا الحذف ما للحذف عندي عذر
+
+//    public void delete(Integer id) {
+//        Bill bill = billRepository.findBillById(id);
+//        if (bill == null) {
+//            throw new ApiException("Feature ID not found");
+//        }
+//        billRepository.delete(bill);
+//    }
+
     ///////////////////////////////////////////////////
     // assign here
 
-    //Merchant
+    //Merchant And Cashier can add services in Bill.
+    //
     public void addServicesToBill(Integer serviceId, Integer billId, Integer branchId, Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
         Branch branch = branchRepository.findBranchById(branchId);
         Bill bill = billRepository.findBillById(billId);
+        Employee employee = null;
         ServicesProduct sp = servicesProductRepository.findServicesProductById(serviceId);
+
+        if (myUser.getRole().equalsIgnoreCase("Cashier")) {
+            for (Employee i : sp.getBranch().getEmployees()) {
+                if (i.getMyUser().getId() == auth) {
+                    employee = employeeRepository.findEmployeeById(i.getId());
+                }
+            }
+            if (employee.getMyUser().getId() != auth) {
+                throw new ApiException("Sorry , You do not have the Authority !");
+            }
+
+
+        } else if (myUser.getRole().equalsIgnoreCase("merchant")) {
+            if (sp.getBranch().getMerchant().getMyUser().getId() != auth) {
+                throw new ApiException("Sorry , You do not have the Authority !");
+            }
+        }
 
         if (bill == null) {
             throw new ApiException("Bill ID not found");
         } else if (sp == null) {
             throw new ApiException("Services Product ID not found");
-        } else if (sp.getBranch().getMerchant().getMyUser().getId() != auth) {
-            throw new ApiException("Sorry , You do not have the Authority !");
         } else if (!branch.getServicesProducts().contains(sp)) {
             throw new ApiException("Sorry , Service not found in this Branch: " + branch.getName());
         }
@@ -136,28 +169,12 @@ public class BillServices {
         billRepository.save(bill);
     }
 
-    // Not used
-    public void addEmployToBill(Integer employeeId, Integer billId, Integer auth) {
-        MyUser myUser = myUserRepository.findMyUserById(auth);
-        Bill bill = billRepository.findBillById(billId);
-        Employee employee = employeeRepository.findEmployeeById(employeeId);
-
-        if (bill == null) {
-            throw new ApiException("Bill ID not found");
-        } else if (employee.getBranch().getMerchant().getMyUser().getId() != auth) {
-            throw new ApiException("not auth");
-        } else if (!myUser.getMerchant().getBill().contains(bill)) {
-            throw new ApiException("not your bill");
-        }
-
-        bill.setEmployee(employee);
-        billRepository.save(bill);
-
-    }
-
-
-    //Merchant
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //Az عشان ما أنساها : يبغالها سكيورتي واسمح للكاشير والتاجر يستخدموها بدون مشاكل +
+    // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //I will break my last timing from challenge 3 here in this endPoint.
     public void removeServicesFromBill(Integer serviceId, Integer billId) {
+
         Bill bill = billRepository.findBillById(billId);
         ServicesProduct sp = servicesProductRepository.findServicesProductById(serviceId);
         if (bill == null) {
@@ -177,27 +194,65 @@ public class BillServices {
 
     }
 
-    //Merchant
+    //challenge 3- I will make this end point able to use for Merchant And Cashier. And they can assign Bill.
+    //Be Strong
+    //start 4:56 am
+    //end 5:05 am
+    // done in 9min -> good job
     public void addBillToCustomerAndMerchantAndEmployee(Integer customerId, Integer billId, Integer employeeId, Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
-        Merchant merchant = merchantRepository.findMerchantById(myUser.getMerchant().getId());
         Customer customer = customerRepository.findCustomerById(customerId);
         Bill bill = billRepository.findBillById(billId);
-        Point point = pointRepository.findPointByCustomerIdAndMerchantId(customerId, merchant.getId());
         Employee employee = employeeRepository.findEmployeeById(employeeId);
 
-        if (point == null) {
-            throw new ApiException("can't add points, please create loyalty point to Customer");
-        } else if (bill == null) {
+        Employee cashier;
+        Merchant merchant = null;
+        Point point = null;
+
+        //if user cashier
+        if (myUser.getRole().equalsIgnoreCase("cashier")) {
+            cashier = employeeRepository.findEmployeeById(myUser.getEmployee().getId());
+            if (cashier == null) {
+                throw new ApiException("Employee not found");
+            }
+            merchant = merchantRepository.findMerchantById(cashier.getBranch().getMerchant().getId());
+            if (merchant == null) {
+                throw new ApiException("Merchant ID not found");
+            }
+            for (Employee i : employee.getBranch().getEmployees()) {
+                if (i.getMyUser().getId() == auth) {
+                    cashier = employeeRepository.findEmployeeById(i.getId());
+                }
+            }
+            if (cashier.getMyUser().getId() != auth) {
+                throw new ApiException("Sorry , You do not have the Authority !");
+            }
+            point = pointRepository.findPointByCustomerIdAndMerchantId(customerId, cashier.getBranch().getMerchant().getId());
+            if (point == null) {
+                throw new ApiException("can't add points, please create loyalty point to Customer");
+            }
+
+            //if user merchant
+        } else if (myUser.getRole().equalsIgnoreCase("Merchant")) {
+            merchant = merchantRepository.findMerchantById(myUser.getMerchant().getId());
+            if (merchant == null) {
+                throw new ApiException("Merchant ID not found");
+            } else if (employee.getBranch().getMerchant().getMyUser().getId() != auth) {
+                throw new ApiException("not auth");
+            }
+            point = pointRepository.findPointByCustomerIdAndMerchantId(customerId, merchant.getId());
+            if (point == null) {
+                throw new ApiException("can't add points, please create loyalty point to Customer");
+            }
+        }
+
+
+        if (bill == null) {
             throw new ApiException("Bill ID not found");
         } else if (customer == null) {
             throw new ApiException("Customer ID not found");
-        } else if (merchant == null) {
-            throw new ApiException("Merchant ID not found");
         } else if (employee == null) {
             throw new ApiException("Employee ID not found");
-        } else if (employee.getBranch().getMerchant().getMyUser().getId() != auth) {
-            throw new ApiException("not auth");
         }
         // Buy by Points
         int totalPointPrice = 0;
@@ -222,11 +277,11 @@ public class BillServices {
 
     //
 
-    public List<Bill> getBillByCreatedDateBetween(String start, String end) throws ParseException {
-        //format string to date
-        List<Bill> bills = billRepository.findAllByCreatedDateBetween(LocalDate.parse(start), LocalDate.parse(end));
-        return bills;
-    }
+//    public List<Bill> getBillByCreatedDateBetween(String start, String end) throws ParseException {
+//        //format string to date
+//        List<Bill> bills = billRepository.findAllByCreatedDateBetween(LocalDate.parse(start), LocalDate.parse(end));
+//        return bills;
+//    }
 
 
     public String getAllIncomeForMerchant(Integer auth) {
@@ -260,6 +315,7 @@ public class BillServices {
         return "#Bill count is: " + count + "\t#Total Income is: " + totalIncome;
     }
 
+
     public String getAllIncomeForBranch(Integer branchId, Integer auth) {
         Branch branch = branchRepository.findBranchById(branchId);
         if (branch == null) {
@@ -283,20 +339,20 @@ public class BillServices {
         return "#All Branch income is: " + totalIncome + " \t#Number of bill is: " + countBill;
     }
 
-    public Map<LocalDate,Double> getAllDailyIncomeForMerchant(Integer auth) {
+    //lovely end point,will come back to see you soon.
+    public Map<LocalDate, Double> getAllDailyIncomeForMerchant(Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
         Merchant merchant = merchantRepository.findMerchantById(myUser.getMerchant().getId());
         if (merchant == null) {
             throw new ApiException("Merchant not found");
         }
-
         Map<LocalDate, Double> map = new HashMap<>();
-        merchant.getBill().forEach((i)->{
-            if(map.containsKey(i.getCreatedDate())){
-                double oldValue=map.get(i.getCreatedDate());
+        merchant.getBill().forEach((i) -> {
+            if (map.containsKey(i.getCreatedDate())) {
+                double oldValue = map.get(i.getCreatedDate());
                 map.replace(i.getCreatedDate(), i.getTotalPrice() + oldValue);
-            }else {
-                map.put (i.getCreatedDate(), i.getTotalPrice());
+            } else {
+                map.put(i.getCreatedDate(), i.getTotalPrice());
             }
         });
         return map;
@@ -309,14 +365,14 @@ public class BillServices {
             throw new ApiException("Merchant not found");
         }
 
-        int count=1;
+        int count = 1;
         Map<LocalDate, Integer> map = new HashMap<>();
-        merchant.getBill().forEach((i)->{
-            if(map.containsKey(i.getCreatedDate())){
-                int oldValue=map.get(i.getCreatedDate());
-                map.replace(i.getCreatedDate(), oldValue+ 1);
-            }else {
-                map.put (i.getCreatedDate(), count);
+        merchant.getBill().forEach((i) -> {
+            if (map.containsKey(i.getCreatedDate())) {
+                int oldValue = map.get(i.getCreatedDate());
+                map.replace(i.getCreatedDate(), oldValue + 1);
+            } else {
+                map.put(i.getCreatedDate(), count);
             }
         });
         return map;
@@ -333,4 +389,5 @@ public class BillServices {
 //        }
 //        return list;
 //    }
+
 }

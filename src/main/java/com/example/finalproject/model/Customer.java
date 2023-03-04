@@ -27,7 +27,7 @@ public class Customer {
     @NotNull(message = "Age must not be null")
     private Integer age;
     @NotEmpty(message = "Gender must not be empty")
-    @Pattern(regexp = "(?:^|\\W)male(?:$|\\W)|(?:^|\\W)female(?:$|\\W)", message = "Gender must be ether Male or Female ")
+    @Pattern(regexp = "(male|female)", message = "Gender must be ether Male or Female ")
     private String gender;
 
     /////////////////////Relations\\\\\\\\\\\\\\\\\\\\\\
