@@ -17,8 +17,16 @@ import java.util.Map;
  * 04-03-2023
  * it does not finish yet.
  * line 165 coming back to you.
+ * ---------------------------------------
  * A يارب ارفع عني حمل التفكير و الترتيب
  * A ودبر لي أمري فإني لا أحسن التدبير
+ * ---------------------------------------
+ * A الكلاس هذا يحتاج تنظيف بخار مع فصل الكاشير عن التاجر عشان يسير كلاسي المفضل -
+ * A بنيتك بدون تخطيط مسبق يا عزيزي هذي غلطتي وراح اصححها في الويكند او اذا فضيتلك -
+ * A فكرة عالطاير - اسوي كلاس نظيف واحط فيه اشياء الكاشير بس أو احطها كلها بكلاس الموظفين -
+ * A لازم ارجع ارسم يوزكيس عشان يوضح الطريق من جديد
+ * A فكرة سيئة جدا أكنسل كل شي وأبدا مشروع ثاني صغير وغير معقد - تحتاج الى استشارة انسان اسطوري(عبدالرحمن ، عبدالله ، مجد ، مها)
+ * A انتهى اليوم 05-03-2023
  */
 
 @Service
@@ -85,7 +93,13 @@ public class BillServices {
 
     }
 
-    public void add(Bill bill) {
+    public void add(Bill bill,Integer auth) {
+        MyUser myUser = myUserRepository.findMyUserById(auth);
+        if(myUser.getRole().equalsIgnoreCase("Cashier")){
+            bill.setMerchant(myUser.getEmployee().getBranch().getMerchant());
+        }else if(myUser.getRole().equalsIgnoreCase("merchant")){
+            bill.setMerchant(myUser.getMerchant());
+        }
         bill.setCreatedDate(LocalDate.now());
         billRepository.save(bill);
     }
@@ -127,6 +141,16 @@ public class BillServices {
         Bill bill = billRepository.findBillById(billId);
         Employee employee = null;
         ServicesProduct sp = servicesProductRepository.findServicesProductById(serviceId);
+        if (bill == null) {
+            throw new ApiException("Bill ID not found");
+        } else if (branch == null) {
+            throw new ApiException("branch ID not found");
+        }
+        else if (sp == null) {
+            throw new ApiException("Services Product ID not found");
+        } else if (!branch.getServicesProducts().contains(sp)) {
+            throw new ApiException("Sorry , Service not found in this Branch: " + branch.getName());
+        }
 
         if (myUser.getRole().equalsIgnoreCase("Cashier")) {
             for (Employee i : sp.getBranch().getEmployees()) {
@@ -145,26 +169,9 @@ public class BillServices {
             }
         }
 
-        if (bill == null) {
-            throw new ApiException("Bill ID not found");
-        } else if (sp == null) {
-            throw new ApiException("Services Product ID not found");
-        } else if (!branch.getServicesProducts().contains(sp)) {
-            throw new ApiException("Sorry , Service not found in this Branch: " + branch.getName());
-        }
-
-        for (ServicesProduct ss : bill.getServicesProducts()) {
-            if (ss.getId() == serviceId) {
-                throw new ApiException("Services Product already added");
-            }
-        }
-        double totalPrice = bill.getTotalPrice();
-        double totalPoints = bill.getTotalPoints();
-
         bill.setCreatedDate(LocalDate.now());
-        bill.setTotalPrice(sp.getPrice() + totalPrice);
-        bill.setTotalPoints(sp.getPoint() + totalPoints);
-        sp.setBill(bill);
+        sp.getBill().add(bill);
+        bill.getServicesProducts().add(sp);
         servicesProductRepository.save(sp);
         billRepository.save(bill);
     }
@@ -173,8 +180,13 @@ public class BillServices {
     //Az عشان ما أنساها : يبغالها سكيورتي واسمح للكاشير والتاجر يستخدموها بدون مشاكل +
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //I will break my last timing from challenge 3 here in this endPoint.
-    public void removeServicesFromBill(Integer serviceId, Integer billId) {
-
+    //start at 08:03 pm
+    //end at 08:12pm
+    //done
+    public void removeServicesFromBill(Integer serviceId, Integer billId, Integer auth) {
+        Merchant merchant;
+        Employee cashier;
+        MyUser myUser = myUserRepository.findMyUserById(auth);
         Bill bill = billRepository.findBillById(billId);
         ServicesProduct sp = servicesProductRepository.findServicesProductById(serviceId);
         if (bill == null) {
@@ -184,11 +196,29 @@ public class BillServices {
         } else if (bill.getServicesProducts().isEmpty()) {
             throw new ApiException("there is no Services Product to delete it");
         }
+        //Cashier flow
+        if (myUser.getRole().equalsIgnoreCase("Cashier")) {
+            cashier=employeeRepository.findEmployeeById(myUser.getEmployee().getId());
+            if (cashier == null) {
+                throw new ApiException("Cashier not found");
+            }else if(sp.getBranch().getMerchant().getMyUser().getId() != auth){
+                throw new ApiException("this product not available in your branch ");
+            }
+        ////merchant flow
+        } else if (myUser.getRole().equalsIgnoreCase("Merchant")) {
+            merchant=merchantRepository.findMerchantById(myUser.getMerchant().getId());
+            if (merchant == null) {
+                throw new ApiException("merchant not found");
+            }else if(sp.getBranch().getMerchant().getMyUser().getId() != auth){
+                throw new ApiException("this product not available in your branch ");
+            }
+        }
         double totalPrice = bill.getTotalPrice();
         double totalPoints = bill.getTotalPoints();
         bill.setTotalPrice(totalPrice - sp.getPrice());
         bill.setTotalPoints(totalPoints - sp.getPoint());
-        sp.setBill(null);
+        sp.getBill().remove(bill);
+        bill.setServicesProducts(null);
         billRepository.save(bill);
         servicesProductRepository.save(sp);
 
@@ -208,6 +238,13 @@ public class BillServices {
         Employee cashier;
         Merchant merchant = null;
         Point point = null;
+        if (bill == null) {
+            throw new ApiException("Bill ID not found");
+        } else if (customer == null) {
+            throw new ApiException("Customer ID not found");
+        } else if (employee == null) {
+            throw new ApiException("Employee ID not found");
+        }
 
         //if user cashier
         if (myUser.getRole().equalsIgnoreCase("cashier")) {
@@ -218,7 +255,10 @@ public class BillServices {
             merchant = merchantRepository.findMerchantById(cashier.getBranch().getMerchant().getId());
             if (merchant == null) {
                 throw new ApiException("Merchant ID not found");
+            } else if ( !cashier.getBranch().getEmployees().contains(employee)) {
+                throw new ApiException("this employee not on your branch");
             }
+
             for (Employee i : employee.getBranch().getEmployees()) {
                 if (i.getMyUser().getId() == auth) {
                     cashier = employeeRepository.findEmployeeById(i.getId());
@@ -226,6 +266,8 @@ public class BillServices {
             }
             if (cashier.getMyUser().getId() != auth) {
                 throw new ApiException("Sorry , You do not have the Authority !");
+            }else if(!merchant.getBill().contains(bill)){
+                throw new ApiException("bill not found in your account");
             }
             point = pointRepository.findPointByCustomerIdAndMerchantId(customerId, cashier.getBranch().getMerchant().getId());
             if (point == null) {
@@ -239,6 +281,8 @@ public class BillServices {
                 throw new ApiException("Merchant ID not found");
             } else if (employee.getBranch().getMerchant().getMyUser().getId() != auth) {
                 throw new ApiException("not auth");
+            }else if(bill.getMerchant().getMyUser().getId() != auth){
+                throw new ApiException("bill not found in your account");
             }
             point = pointRepository.findPointByCustomerIdAndMerchantId(customerId, merchant.getId());
             if (point == null) {
@@ -246,14 +290,6 @@ public class BillServices {
             }
         }
 
-
-        if (bill == null) {
-            throw new ApiException("Bill ID not found");
-        } else if (customer == null) {
-            throw new ApiException("Customer ID not found");
-        } else if (employee == null) {
-            throw new ApiException("Employee ID not found");
-        }
         // Buy by Points
         int totalPointPrice = 0;
         if (bill.getPaymentMethod().equalsIgnoreCase("point")) {
@@ -263,12 +299,18 @@ public class BillServices {
             if (point.getPoints() >= totalPointPrice) {
                 point.setPoints(point.getPoints() - totalPointPrice);
             } else {
-                throw new ApiException("Customer point balance not enough to buy this bill");
+                throw new ApiException(customer.getFirstName()+": point balance not enough to buy this bill");
             }
         } else {
-            point.setPoints(bill.getTotalPoints());
+            bill.setTotalPrice(0);
+            bill.setTotalPoints(0);
+            for (ServicesProduct ss : bill.getServicesProducts()) {
+                bill.setTotalPrice(ss.getPrice() + bill.getTotalPrice());
+                bill.setTotalPoints(ss.getPoint() + bill.getTotalPoints());
+            }
         }
-        bill.setMerchant(merchant);
+
+        bill.setCreatedDate(LocalDate.now());
         bill.setCustomer(customer);
         bill.setEmployee(employee);
         billRepository.save(bill);

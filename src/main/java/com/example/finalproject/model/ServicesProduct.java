@@ -40,10 +40,9 @@ public class ServicesProduct {
 
 
 
-    @ManyToOne
-    @JoinColumn(name = "bill_id", referencedColumnName ="id")
+    @ManyToMany
     @JsonIgnore
-    private Bill bill;
+    private List<Bill> bill;
 
 //
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "menu")

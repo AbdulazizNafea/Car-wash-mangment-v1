@@ -105,7 +105,7 @@ public class PointService {
     // Merchant And Cashier can create point subscribe for user.
     //Challenge 1- make merchant and cashier able to assign in same end point.
     //start time 4:25 am ....
-    //end time 4:45 am -> lazy boy-_-
+    //end time 4:45 am -> lazy boy -_-
 
     public void assignPointToCustomerAndMerchant(Point newPoint, Integer customerId, Integer auth) {
         Employee employee;
