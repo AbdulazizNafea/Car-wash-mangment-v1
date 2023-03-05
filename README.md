@@ -22,7 +22,8 @@ https://documenter.getpostman.com/view/25472545/2s93CRMCat
 https://www.figma.com/file/SCL8G84tYZRALqkxnZSbFV/%D9%85%D9%86%D8%B5%D8%A9-%D8%BA%D8%B3%D9%84%D8%A9?t=uXLL6g6r9Er9rOf7-6
 
 ## Class Diagram
-Note: Diagram updated -> there is relations between My_User table and Employee "OneToOne"
+Note: Diagram updated -> there is relations between My_User table and Employee "OneToOne" because I added Cashier.
+Note: Diagram updated -> ServiceProuduct and bill relation is "ManyToMany".
 ![carwashservices](https://user-images.githubusercontent.com/78857323/222176294-ee519ee7-1ef1-4542-9953-b3d00ff809fe.png)
 
 ## UseCase![Final_Project-Page-2](https://user-images.githubusercontent.com/78857323/222361619-1fe69ca8-7731-49c7-b31e-baf3b690c675.jpg)
