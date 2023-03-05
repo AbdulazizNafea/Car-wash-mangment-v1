@@ -38,10 +38,7 @@ public class Bill {
     private Merchant merchant;
 
 
-    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "bill")
-    //Remember if you want to delete any child use this
-    // orphanRemoval=true
-    // @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "bill" ,orphanRemoval=true)
+    @ManyToMany( mappedBy = "bill")
     private List<ServicesProduct> servicesProducts;
 
 

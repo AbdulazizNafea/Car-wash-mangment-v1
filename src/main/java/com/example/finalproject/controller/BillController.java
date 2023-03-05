@@ -50,15 +50,15 @@ public class BillController {
 
     //merchant
     @PostMapping("/merchant/add")
-    public ResponseEntity add(@RequestBody @Valid Bill bill) {
-        billServices.add(bill);
+    public ResponseEntity add(@RequestBody @Valid Bill bill,@AuthenticationPrincipal MyUser myUser) {
+        billServices.add(bill, myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 
     //cashier
     @PostMapping("/cashier/add")
-    public ResponseEntity add2(@RequestBody @Valid Bill bill) {
-        billServices.add(bill);
+    public ResponseEntity add2(@RequestBody @Valid Bill bill,@AuthenticationPrincipal MyUser myUser) {
+        billServices.add(bill,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
     }
 
@@ -85,7 +85,7 @@ public class BillController {
     }
 
     //cashier
-    @PostMapping("/cashier/addServicesToBill/product_id-{spId}/bill_id-{billId}/branch_id{branchId}")
+    @PostMapping("/cashier/addServicesToBill/product_id-{spId}/bill_id-{billId}/branch_id-{branchId}")
     public ResponseEntity addServicesToBill2(@PathVariable Integer billId, @PathVariable Integer branchId, @PathVariable Integer spId, @AuthenticationPrincipal MyUser myUser) {
         billServices.addServicesToBill(spId, billId, branchId, myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("CREATED");
@@ -93,15 +93,15 @@ public class BillController {
 
     //merchant
     @PutMapping("/merchant/removeServicesFromBill/{spId}/{billId}")
-    public ResponseEntity removeServicesFromBill(@PathVariable Integer billId, @PathVariable Integer spId) {
-        billServices.removeServicesFromBill(spId, billId);
+    public ResponseEntity removeServicesFromBill(@PathVariable Integer billId, @PathVariable Integer spId,@AuthenticationPrincipal MyUser myUser) {
+        billServices.removeServicesFromBill(spId, billId,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("removed");
     }
 
     //cashier
     @PutMapping("/cashier/removeServicesFromBill/{spId}/{billId}")
-    public ResponseEntity removeServicesFromBill2(@PathVariable Integer billId, @PathVariable Integer spId) {
-        billServices.removeServicesFromBill(spId, billId);
+    public ResponseEntity removeServicesFromBill2(@PathVariable Integer billId, @PathVariable Integer spId,@AuthenticationPrincipal MyUser myUser) {
+        billServices.removeServicesFromBill(spId, billId,myUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("removed");
     }
 

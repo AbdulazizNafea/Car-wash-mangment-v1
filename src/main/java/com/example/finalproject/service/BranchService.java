@@ -80,6 +80,9 @@ public class BranchService {
 
     public void addBranchToMerchant(Branch branch, Integer auth) {
         MyUser myUser = myUserRepository.findMyUserById(auth);
+        if(myUser.getMerchant().getId() == null){
+            throw new ApiException("please create your merchant details first");
+        }
         Merchant merchant = merchantRepository.findMerchantById(myUser.getMerchant().getId());
         if (merchant == null) {
             throw new ApiException("merchant ID not found");
