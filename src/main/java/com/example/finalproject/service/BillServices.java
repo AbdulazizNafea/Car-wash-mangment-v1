@@ -12,11 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /*
  * Author : Abdulaziz N. Alamri
  * 04-03-2023
  * it does not finish yet.
  * line 165 coming back to you.
+ * Written with love 💖
  * ---------------------------------------
  * A يارب ارفع عني حمل التفكير و الترتيب
  * A ودبر لي أمري فإني لا أحسن التدبير
@@ -27,6 +29,9 @@ import java.util.Map;
  * A لازم ارجع ارسم يوزكيس عشان يوضح الطريق من جديد
  * A فكرة سيئة جدا أكنسل كل شي وأبدا مشروع ثاني صغير وغير معقد - تحتاج الى استشارة انسان اسطوري(عبدالرحمن ، عبدالله ، مجد ، مها)
  * A انتهى اليوم 05-03-2023
+ * ------------------------------------------
+ * new day,new story, I hope this class love me as i love it. - 2023-03-08
+ *
  */
 
 @Service
@@ -53,6 +58,7 @@ public class BillServices {
         MyUser myUser = myUserRepository.findMyUserById(auth);
         List<Bill> bill = billRepository.findAllBillByCustomerId(myUser.getCustomer().getId());
         if (bill == null) {
+
             throw new ApiException("bill not found");
         }
         return bill;
@@ -177,7 +183,8 @@ public class BillServices {
     }
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    //Az عشان ما أنساها : يبغالها سكيورتي واسمح للكاشير والتاجر يستخدموها بدون مشاكل +
+    //Az عشان ما أنساها : يبغالها سكيورتي واسمح للكاشير والتاجر يستخدموها بدون مشاكل
+    // DONE ...
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //I will break my last timing from challenge 3 here in this endPoint.
     //start at 08:03 pm
