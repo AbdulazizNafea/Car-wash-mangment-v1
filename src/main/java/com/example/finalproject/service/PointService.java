@@ -9,14 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 /*
- * challenge Start from here
- * role:
  * - write note everywhere about everything in your mind.
- * - any new endpoint or update I will start count timing to see my performance.
- * - No SMOKING never ever  🚭
- * - No Phone, close it.
- * - take 10 min brake every 1 hour
- * - if I break any of these rules, I will be a loser
  * - light in the sky ✨
  */
 
